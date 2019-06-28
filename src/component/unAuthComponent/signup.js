@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import validation from "../../validation/signupValidation";
-import { connect } from "react-redux";
-import { registerUser, loginUser } from "../../action/authAction";
+//import validation from "../../validation/signupValidation";
+//import { connect } from "react-redux";
+//import { registerUser, loginUser } from "../../action/authAction";
 import { StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import logo from "../../img/logo.jpg";
 import {
@@ -19,7 +19,7 @@ import {
   Spinner
 } from "native-base";
 
-import imagePicker from "react-native-image-picker";
+//import imagePicker from "react-native-image-picker";
 class SignUp extends Component {
   constructor() {
     super();
@@ -40,45 +40,45 @@ class SignUp extends Component {
     }
   }
 
-  handelChoosePhoto = () => {
-    ActionSheet.show(
-      {
-        options: [
-          { text: "camira", icon: "camera", iconColor: "green" },
-          { text: "Galary", icon: "image", iconColor: "green" },
-          { text: "cancl", icon: "exit", iconColor: "green" }
-        ],
-        cancelButtonIndex: 2
-      },
-      ButtonIndex => {
-        if (ButtonIndex == 0) {
-          imagePicker.launchCamera({}, res => {
-            this.setState({ image: res.uri });
-          });
-        } else if (ButtonIndex == 1) {
-          imagePicker.launchImageLibrary({}, res => {
-            if (res.fileSize > 1024 * 1024) {
-              return alert("the maxmum sizee of image is 1MB");
-            }
-            this.setState({ image: res.uri });
-          });
-        }
-      }
-    );
-  };
-  handelSubmit = () => {
-        // console.log('from handel submit ',this.state)
-        const { errors, isvalid } = validation(this.state);
-       if (!isvalid) return this.setState({ errors, errors });
-        this.props
-            .registerUser(this.state)
-            .then(data => {
-              this.props.loginUser(data);
-            })
-          .catch(err => {
-            console.log(err);
-          });
-  };
+  // handelChoosePhoto = () => {
+  //   ActionSheet.show(
+  //     {
+  //       options: [
+  //         { text: "camira", icon: "camera", iconColor: "green" },
+  //         { text: "Galary", icon: "image", iconColor: "green" },
+  //         { text: "cancl", icon: "exit", iconColor: "green" }
+  //       ],
+  //       cancelButtonIndex: 2
+  //     },
+  //     ButtonIndex => {
+  //       if (ButtonIndex == 0) {
+  //         imagePicker.launchCamera({}, res => {
+  //           this.setState({ image: res.uri });
+  //         });
+  //       } else if (ButtonIndex == 1) {
+  //         imagePicker.launchImageLibrary({}, res => {
+  //           if (res.fileSize > 1024 * 1024) {
+  //             return alert("the maxmum sizee of image is 1MB");
+  //           }
+  //           this.setState({ image: res.uri });
+  //         });
+  //       }
+  //     }
+  //   );
+  // };
+  // handelSubmit = () => {
+  //       // console.log('from handel submit ',this.state)
+  //       const { errors, isvalid } = validation(this.state);
+  //      if (!isvalid) return this.setState({ errors, errors });
+  //       this.props
+  //           .registerUser(this.state)
+  //           .then(data => {
+  //             this.props.loginUser(data);
+  //           })
+  //         .catch(err => {
+  //           console.log(err);
+  //         });
+  // };
 
   render() {
     const { errors } = this.state;
@@ -180,7 +180,8 @@ class SignUp extends Component {
                   <Text style={{ color: "#f99898" }}> {errors.password2} </Text>
                 )}
                 </Item>
-                {this.props.auth.isLoading ? (
+                {//this.props.auth.isLoading ?
+                false? (
                   <Spinner />
                 ) : (
                   <Button
@@ -239,7 +240,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   }
 });
-export default connect(
-  mapStateToProps,
-  { registerUser, loginUser }
-)(SignUp);
+// export default connect(
+//   mapStateToProps,
+//   { registerUser, loginUser }
+// )(SignUp);
+
+export default SignUp;
