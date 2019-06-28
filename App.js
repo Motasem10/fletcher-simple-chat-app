@@ -8,15 +8,15 @@
 
 import React, {Component} from 'react';
 import { StyleSheet, Text, View} from 'react-native';
-import Login from './src/component/unAuthComponent/Login';
-import SignUp from './src/component/unAuthComponent/signup';
+import RootStackNavigator from './src/component/unAuthComponent/scrollView';
+
 
 
 export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
- <SignUp></SignUp>
+ <RootStackNavigator></RootStackNavigator>
       </View>
     );
   }

@@ -101,7 +101,7 @@ class Login extends Component {
             <TouchableOpacity
               onPress={() => {
                 console.log("hi");
-            //    this.props.goToRegisterPage();
+              this.props.goToRegisterPage();
               }}
             >
               <View style={{ alignItems: "center" }}>
