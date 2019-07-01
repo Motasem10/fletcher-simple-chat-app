@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-//import validation from "../../validation/signupValidation";
-//import { connect } from "react-redux";
-//import { registerUser, loginUser } from "../../action/authAction";
+import validation from "../../validation/signupValidation";
+import { connect } from "react-redux";
+import { registerUser, loginUser } from "../../action/authAction";
 import { StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import logo from "../../img/logo.jpg";
 import {
@@ -66,19 +66,19 @@ class SignUp extends Component {
   //     }
   //   );
   // };
-  // handelSubmit = () => {
-  //       // console.log('from handel submit ',this.state)
-  //       const { errors, isvalid } = validation(this.state);
-  //      if (!isvalid) return this.setState({ errors, errors });
-  //       this.props
-  //           .registerUser(this.state)
-  //           .then(data => {
-  //             this.props.loginUser(data);
-  //           })
-  //         .catch(err => {
-  //           console.log(err);
-  //         });
-  // };
+   handelSubmit = () => {
+          console.log('from handel submit ',this.state)
+         const { errors, isvalid } = validation(this.state);
+        if (!isvalid) return this.setState({ errors, errors });
+         this.props
+             .registerUser(this.state)
+             .then(data => {
+               this.props.loginUser(data);
+             })
+           .catch(err => {
+             console.log(err);
+           });
+   };
 
   render() {
     const { errors } = this.state;
@@ -176,12 +176,10 @@ class SignUp extends Component {
                     />
                   </TouchableOpacity>
                   <Text>{this.state.image ? "uploaded sucsessfully" : ""}</Text>
-                  {errors.password2 && (
-                  <Text style={{ color: "#f99898" }}> {errors.password2} </Text>
-                )}
+             
                 </Item>
-                {//this.props.auth.isLoading ?
-                false? (
+                {this.props.auth.isLoading ?
+                 (
                   <Spinner />
                 ) : (
                   <Button
@@ -240,9 +238,9 @@ const styles = StyleSheet.create({
     alignItems: "center"
   }
 });
-// export default connect(
-//   mapStateToProps,
-//   { registerUser, loginUser }
-// )(SignUp);
+ export default connect(
+   mapStateToProps,
+   { registerUser, loginUser }
+ )(SignUp);
 
-export default SignUp;
+//export default SignUp;

@@ -1,6 +1,6 @@
 import { LOADING, FAILD, GET_ERRORS, SET_CURRENT_USER } from "./ActionType";
 //import rnFirebase from "react-native-firebase";
-import fIrebaseWeb from "firebase";
+import firebase from "firebase";
 import { AsyncStorage } from "react-native";
 
 export const loginUser = userData => dispatch => {
@@ -9,10 +9,12 @@ export const loginUser = userData => dispatch => {
   dispatch({
     type: LOADING  //spinner start 
   });
-  fIrebaseWeb
+  console.log('firebase eweb ',{userData})
+  firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .then(token => {
+      console.log({token})
       //save in local storge
       const data = {email, uid: token.user.uid };
       AsyncStorage.setItem("USER", JSON.stringify(data))
@@ -37,12 +39,12 @@ export const registerUser = userData => dispatch => {
     dispatch({ type: GET_ERRORS }); //remove errors from reducers
    
     //create user
-    fIrebaseWeb
+    firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
 
-        //save image in storge
+        //save image in storge 
         firebase
           .storage()
           .ref("/image/profileimage")
@@ -91,7 +93,7 @@ export const setCurrentUser = data => dispatch => {
 };
 const firebaseErrorCode = err => {
   let errorMsg = {};
-
+console.log({err:err.code});
   switch (err.code) {
     case "auth/network-request-failed":
       errorMsg.connection =
@@ -107,6 +109,8 @@ const firebaseErrorCode = err => {
     case "auth/weak-password":
       errorMsg.password = err.message;
       break;
+      case "auth/user-not-found":
+       err.email="no user has this mail" 
     default:'auth/wrong-password'
       errorMsg.password='wrong password'
       errorMsg.err = "unknown error";

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import logo from "../../img/logo.jpg";
-//import { loginUser } from "../../action/authAction";
+import { loginUser } from "../../action/authAction";
 import {
   Button,
   Spinner,
@@ -14,8 +14,8 @@ import {
   Container,
   Content
 } from "native-base";
-//import validation from "../../validation/loginValidation";
-//import { connect } from "react-redux";
+import validation from "../../validation/loginValidation";
+import { connect } from "react-redux";
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -28,23 +28,23 @@ class Login extends Component {
   }
 
 
-  // componentWillReceiveProps=(props)=>{
+   componentWillReceiveProps=(props)=>{
   
-  // if(props.errors){
+  if(props.errors){
      
-  //    this.setState({errors:props.errors});
-  // } 
-  // }
-  // onsubmit =  () => {
-  //   const { errors, isvalid } = validation(this.state);
-  //   if (!isvalid)  return this.setState({ errors });
+    this.setState({errors:props.errors});
+   } 
+   }
+   onsubmit =  () => {
+     const { errors, isvalid } = validation(this.state);
+     if (!isvalid)  return this.setState({ errors });
     
-  //   const { email, password } = this.state;
-  //   this.props.loginUser({ email, password });
-  // };
+     const { email, password } = this.state;
+    this.props.loginUser({ email, password });
+   };
   renderButton = () => {
-   // const button = this.props.auth.isLoading  ? 
-   const button=false ? (
+    const button = this.props.auth.isLoading  ? 
+    (
       <Spinner />
     ) : (
       <Button style={styles.button} onPress={this.onsubmit} full success>
@@ -158,9 +158,9 @@ const styles = StyleSheet.create({
 
   }
 });
-// export default connect(
-//   mapStateToProps,
-//   { loginUser }
-// )(Login);
+ export default connect(
+   mapStateToProps,
+   { loginUser }
+ )(Login);
 
-export default Login
+//export default Login
