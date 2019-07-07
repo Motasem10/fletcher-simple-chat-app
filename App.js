@@ -8,43 +8,54 @@
 
 import React, {Component} from 'react';
 import { StyleSheet, Text, View,AsyncStorage} from 'react-native';
-import RootStackNavigator from './src/component/unAuthComponent/scrollView';
+import UnAuthComponent from './src/component/unAuthComponent/scrollView';
 import { Provider } from "react-redux";
 import store from "./src/store";
 import { Root } from "native-base";
- import firebase from 'firebase';
+ import firebase from './src/firebase';
+ import SpinnerScreen from './src/component/spinner'
  import {setCurrentUser} from './src/action/authAction'
+//console.log({setCurrentUser:setCurrentUser('hi')})
+import RootNavigator from './src/component/authComponent/navbar';
+
+//test component 
+
+
 export default class App extends Component {
-   
+  constructor() {
+    super();
+    this.state = {
+      isAuth: null
+    };
+  }
   async componentDidMount(){
 
-    if(!firebase.apps.length){
-          var config = {
-            apiKey: "AIzaSyAE4zm_Ra_6gajcMZ9Kl6T-GaZDlT2ZwGo",
-            authDomain: "control-717c0.firebaseapp.com",
-            databaseURL: "https://control-717c0.firebaseio.com",
-            projectId: "control-717c0",
-            storageBucket: "",
-            messagingSenderId: "335441848101"
-          };
-        
-         firebase.initializeApp(config);
-        // firebase.auth().signOut();
-        }
+  console.log({store:store.getState()})
+  console.log(1);
         AsyncStorage.getItem('USER').then(user=>{
         if(!user) {
+          console.log(2);
           this.setState({isAuth:false})
           firebase.auth().signOut();
         }
       // this.setState({isAuth:true})
-      if(user) this.setState({isAuth:true});})
+      if(user) {this.setState({isAuth:true});
+      console.log(3);
+      store.dispatch( setCurrentUser(JSON.parse(user)));
+console.log('usssser',{user:JSON.parse(user)})
+     
+      console.log('cccc',store.getState())
+      }
+    })
         
       firebase.auth().onAuthStateChanged(user => {
         if (user) { 
+          console.log(4)
              console.log(user);
                  this.setState({ isAuth: true });
-                      
+                   // store.dispatch( setCurrentUser('WDWQPD'))
           } else {
+            console.log(5)
             this.setState({ isAuth: false });
          AsyncStorage.removeItem('Friends');
          AsyncStorage.removeItem('USER');     
@@ -53,14 +64,35 @@ export default class App extends Component {
         });
       }
 
+      renderNavigator() {
+        //loading
+        if (this.state.isAuth === null) {
+          return <SpinnerScreen />;
+        } else {
+          return this.state.isAuth ?
+          //home & chat & calls
+          (
+            <UnAuthComponent />
+          ) ://login & signup
+           (
+            <UnAuthComponent reload={this.reload} />
+          );
+        }
+      }
+
   render() {
 
     return (
       <Provider store={store}>
     <Root>
-      <View style={styles.container}>
- <RootStackNavigator></RootStackNavigator>
-      </View>
+   {
+     
+     this.state.isAuth==null?<SpinnerScreen></SpinnerScreen> :
+     this.state.isAuth?
+<RootNavigator></RootNavigator>: <UnAuthComponent></UnAuthComponent>
+   }
+
+
       </Root>
       </Provider>
     );

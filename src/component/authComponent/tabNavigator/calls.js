@@ -3,8 +3,7 @@ import {
   View,
   Text,
   Thumbnail,
-  Badge,
-  Header,
+
   Container,
   Content
 } from "native-base";

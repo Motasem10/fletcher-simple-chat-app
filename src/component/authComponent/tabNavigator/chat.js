@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import bg from "../../../img/bg.png";
+//import { PermissionsAndroid } from 'react-native'
 import {
   View,
   Text,
@@ -10,8 +11,9 @@ import {
   Textarea,
   ActionSheet,
 } from "native-base";
+import firebase from '../../../firebase'
 import imagePicker from "react-native-image-picker";
-import {  ScrollView } from "react-native";
+import {  ScrollView,PermissionsAndroid } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   ImageBackground,
@@ -43,6 +45,15 @@ componentWillUnmount(){
   
 }
   handelChoosePhoto = () => {
+    PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.CAMERA,{
+        title:'hellw',
+        message:'sdosdldsd',
+        buttonNeutral:'dsds',
+        buttonNegative:'negative',
+        buttonPositive:'positive'   
+      }
+    )
     ActionSheet.show(
       {
         options: [
@@ -108,9 +119,20 @@ componentWillUnmount(){
     const msg =this.state.msg;
  if(msg.length<1) return
  this.setState({msg:''})
+ const reciverUid = this.props.navigation.getParam("data").uid;
+ const senderUid=this.props.senderUid;
+ console.log({senderUid,reciverUid,p:this.props})
   this.props.sendMsg({msg}).then(msg => {
      this.props.navigation.getParam('lastMsg')(this.props.reciverUid,msg)
     });
+    console.log({senderUid,reciverUid})
+   // firebase.database()
+    //.ref(`msg/${reciverUid}`)
+    //.child(senderUid)
+   // .push(msg)
+    //.catch(err => console.error(err));
+
+
   };
   render() {
 
@@ -307,6 +329,7 @@ const styles = StyleSheet.create({
 });
 
 mapStateToProps = state => {
+  console.log({state})
   return {
     auth: state.auth,
     msg: "",
@@ -319,7 +342,9 @@ mapStateToProps = state => {
     friends:state.chat.friends,
   };
 };
-export default connect(
-  mapStateToProps,
-  { prepareSenderReciverChat,sendMsg }
-)(Chat);
+ export default connect(
+   mapStateToProps,
+   { prepareSenderReciverChat,sendMsg }
+ )(Chat);
+
+//export default Chat;

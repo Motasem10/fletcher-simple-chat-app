@@ -2,6 +2,8 @@ import Login from "./Login";
 import SignUp from "./signup";
 import { StyleSheet, View, ScrollView, Dimensions } from "react-native";
 import React, { Component } from "react";
+
+//import console = require("console");
 const deviceWidth = Dimensions.get("window").width;
  class rootStackNavigator extends Component {
   constructor(props) {
@@ -10,12 +12,15 @@ const deviceWidth = Dimensions.get("window").width;
       scrollTo: { x: 0, y: 0, animated: true }
     };
   }
-
   goToRegisterPage = () => {
+    console.log({this:this});
     this.scroller.scrollTo({ x: deviceWidth, y: 0 });
   };
+
+
+
   render() {
-    return (
+      return (
       <ScrollView
       contentContainerStyle={{flexGrow:1,justifyContent:'center'}}
         ref={scroll => (this.scroller = scroll)}
@@ -39,10 +44,10 @@ const deviceWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   view: {
     backgroundColor: "white",
-    flex: 1,
-    width: Dimensions.get("window").width,
-    justifyContent: "center",
-    alignItems: "center"
+  //  flex: 1,
+   width: Dimensions.get("window").width,
+  //  justifyContent: "center",
+   // alignItems: "center"
   }
 });
 

@@ -1,8 +1,8 @@
-import Firebase from "firebase";
+import firebase from "../firebase";
 import { AsyncStorage } from "react-native";
 import { SET_FRIENDS, SET_OLD_CHAT_FOR_USER, UPDATE_CHAT } from "./ActionType";
 import store from "../store";
-import rnFirebase from "react-native-firebase";
+//import firebase from "react-native-firebase";
 //___________________________________________________
 
 {
@@ -19,8 +19,7 @@ const getFriends = () => dispatch => {
       friends && dispatch({ type: SET_FRIENDS, payload: friends });
       //get friends from databse
 
-      Firebase.database()
-        .ref("users")
+     firebase.database().ref('users')
         .on("value", snapShot => {
           //if there are friends in local storge
           if (friends) {
@@ -120,7 +119,7 @@ const getTime = () => {
 
 const uploadImg = msg => {
   const { reciverUid, senderUid } = store.getState().chat;
-  rnFirebase
+  firebase
     .storage()
     .ref("image/msg")
     .child(reciverUid)
@@ -128,7 +127,7 @@ const uploadImg = msg => {
     .then(image => {
       msg.url = image.downloadURL;
       //     this.setState({ url: image.downloadURL });
-      Firebase.database()
+      firebase.database()
         .ref(`msg/${reciverUid}`)
         .child(senderUid)
         .push(msg)
@@ -164,7 +163,7 @@ const sendMsg = msg => dispatch => {
     if (msg.uri) return uploadImg(newMsg); //upload image  get url of image in  firebase storge
     //if it was text-msg(not img )
 
-  rnFirebase.database()
+  firebase.database()
       .ref(`msg/${reciverUid}`)
       .child(senderUid)
       .push(newMsg)

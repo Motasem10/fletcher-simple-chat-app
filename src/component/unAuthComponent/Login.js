@@ -125,7 +125,7 @@ mapStateToProps = state => {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-
+//width:'90%',
     alignItems: "center"
   },
   image: {
@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
   form: {
     flex: 80,
     flexDirection: "column",
-    width: "80%",
+    width: "95%",
+    
   //  marginTop: 40
   },
   button: {

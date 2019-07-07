@@ -12,7 +12,7 @@ import {
 import { TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import Firebase from "firebase";
-import firebase from 'react-native-firebase'
+
 import { getFriends, setLastMsg, updateChat } from "../../../action/chatAction";
 
 class Home extends Component {
@@ -199,5 +199,5 @@ mapStateToProps = state => {
 };
 export default connect(
   mapStateToProps,
-  { getFriends, setLastMsg, updateChat }
+  { getFriends ,setLastMsg, updateChat }
 )(Home);

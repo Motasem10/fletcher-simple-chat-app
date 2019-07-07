@@ -144,6 +144,7 @@ if(!firebase.apps.length){
   }
 
   render() {
+    console.log({store});
     return <Provider store={store}>
     <Root>
  {this.renderNavigator()}

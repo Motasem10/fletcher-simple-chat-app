@@ -1,9 +1,9 @@
 import { LOADING, FAILD, GET_ERRORS, SET_CURRENT_USER } from "./ActionType";
 //import rnFirebase from "react-native-firebase";
-import firebase from "firebase";
+import firebase from "../firebase";
 import { AsyncStorage } from "react-native";
 
-export const loginUser = userData => dispatch => {
+ const loginUser = userData => dispatch => {
   dispatch({ type: GET_ERRORS, payload: {} });//remove error from login
   const { email, password } = userData;
   dispatch({
@@ -32,7 +32,7 @@ export const loginUser = userData => dispatch => {
     });
 };
 
-export const registerUser = userData => dispatch => {
+ const registerUser = userData => dispatch => {
   const { name, email, image, password } = userData;
   return new Promise((resolve, reject) => {
     dispatch({ type: LOADING });
@@ -85,7 +85,8 @@ export const registerUser = userData => dispatch => {
   });
 };
 
-export const setCurrentUser = data => dispatch => {
+ const setCurrentUser = data => dispatch => {
+  console.log('hellow from set current user')
   return dispatch({
     type: SET_CURRENT_USER,
     payload: data
@@ -128,3 +129,9 @@ const despatchErr=(err,dispatch)=>{
   });
 
 }
+
+
+module.exports.setCurrentUser=setCurrentUser;
+module.exports.loginUser=loginUser;
+module.exports.registerUser=registerUser;
+//module.exports.setCurrentUser=setCurrentUser;

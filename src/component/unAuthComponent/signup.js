@@ -19,7 +19,7 @@ import {
   Spinner
 } from "native-base";
 
-//import imagePicker from "react-native-image-picker";
+import imagePicker from "react-native-image-picker";
 class SignUp extends Component {
   constructor() {
     super();
@@ -40,32 +40,32 @@ class SignUp extends Component {
     }
   }
 
-  // handelChoosePhoto = () => {
-  //   ActionSheet.show(
-  //     {
-  //       options: [
-  //         { text: "camira", icon: "camera", iconColor: "green" },
-  //         { text: "Galary", icon: "image", iconColor: "green" },
-  //         { text: "cancl", icon: "exit", iconColor: "green" }
-  //       ],
-  //       cancelButtonIndex: 2
-  //     },
-  //     ButtonIndex => {
-  //       if (ButtonIndex == 0) {
-  //         imagePicker.launchCamera({}, res => {
-  //           this.setState({ image: res.uri });
-  //         });
-  //       } else if (ButtonIndex == 1) {
-  //         imagePicker.launchImageLibrary({}, res => {
-  //           if (res.fileSize > 1024 * 1024) {
-  //             return alert("the maxmum sizee of image is 1MB");
-  //           }
-  //           this.setState({ image: res.uri });
-  //         });
-  //       }
-  //     }
-  //   );
-  // };
+   handelChoosePhoto = () => {
+     ActionSheet.show(
+       {
+         options: [
+           { text: "camira", icon: "camera", iconColor: "green" },
+           { text: "Galary", icon: "image", iconColor: "green" },
+           { text: "cancl", icon: "exit", iconColor: "green" }
+         ],
+         cancelButtonIndex: 2
+       },
+       ButtonIndex => {
+         if (ButtonIndex == 0) {
+           imagePicker.launchCamera({}, res => {
+             this.setState({ image: res.uri });
+           });
+         } else if (ButtonIndex == 1) {
+           imagePicker.launchImageLibrary({}, res => {
+             if (res.fileSize > 1024 * 1024) {
+               return alert("the maxmum sizee of image is 1MB");
+             }
+             this.setState({ image: res.uri });
+           });
+         }
+       }
+     );
+   };
    handelSubmit = () => {
           console.log('from handel submit ',this.state)
          const { errors, isvalid } = validation(this.state);

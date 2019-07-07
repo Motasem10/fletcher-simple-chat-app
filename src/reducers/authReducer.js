@@ -1,4 +1,5 @@
 import {LOADING,FAILD,SET_CURRENT_USER} from '../action/ActionType'
+//import console = require('console');
 const initialState={
     isAuth:false,
     isLoading:false,
@@ -8,13 +9,16 @@ const initialState={
 
 
 export default function(state=initialState,action){
-switch(action.type){
-    case SET_CURRENT_USER:  
+
+    switch(action.type){
+
+    case SET_CURRENT_USER:
+        console.log('SET_CURRENT_USER',action) ; 
     return{
         ...state ,
         user:action.payload,
         isLoading:false,
-        isAuth:Object.keys(action.payload).length==0 ||action.payload===undefined?false:true
+        isAuth: (Object.keys(action.payload).length==0 ||action.payload===undefined )? false:true
     };
     case LOADING:
     return{

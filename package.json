@@ -5,7 +5,8 @@
   "scripts": {
     "android": "react-native run-android",
     "clean": "cd android && gradlew clean && cd .. && npm run android ",
-    "build": "cd android && gradlew bundleRelease"
+    "build": "cd android && gradlew bundleRelease",
+    "apk":"cd android && gradlew assembleRelease"
   },
   "dependencies": {
     "@babel/cli": "7.0.0",
@@ -13,6 +14,9 @@
     "native-base": "^2.12.1",
     "react": "^16.8.6",
     "react-native": "0.59.9",
+    "react-native-gesture-handler": "^1.3.0",
+    "react-native-image-picker": "^0.28.1",
+    "react-navigation": "^3.11.0",
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
