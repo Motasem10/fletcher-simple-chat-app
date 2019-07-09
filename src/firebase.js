@@ -5,7 +5,7 @@ if(!firebase.apps.length){
       authDomain: "control-717c0.firebaseapp.com",
       databaseURL: "https://control-717c0.firebaseio.com",
       projectId: "control-717c0",
-      storageBucket: "",
+      storageBucket: "control-717c0.ci4w0.appspot.com",
       messagingSenderId: "335441848101"
     };
   

@@ -13,7 +13,7 @@ const deviceWidth = Dimensions.get("window").width;
     };
   }
   goToRegisterPage = () => {
-    console.log({this:this});
+    //console.log({this:this});
     this.scroller.scrollTo({ x: deviceWidth, y: 0 });
   };
 

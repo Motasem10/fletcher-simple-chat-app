@@ -34,6 +34,7 @@ import { AsyncStorage } from "react-native";
 
  const registerUser = userData => dispatch => {
   const { name, email, image, password } = userData;
+  console.log({userData});
   return new Promise((resolve, reject) => {
     dispatch({ type: LOADING });
     dispatch({ type: GET_ERRORS }); //remove errors from reducers
@@ -45,24 +46,25 @@ import { AsyncStorage } from "react-native";
       .then(user => {
 
         //save image in storge 
-        firebase
-          .storage()
-          .ref("/image/profileimage")
-          .child(user.user.uid)
-          .putFile(image)
-          .then(image => {
+  //      firebase
+    //      .storage()
+      //    .ref("/image/profileimage")
+        //  .child(user.user.uid)
+          //.putFile(image)
+     //     .then(image => {
             //pudh data in DB
    
             firebase
               .database()
-              .ref(`users/`)
+              .ref(`users`)
               .child(user.user.uid)
-              .set({ name, email, image: image.downloadURL })
+              .set({ name, email }) //  image.downloadURL })
               .then(() => {
                 //sign in method
                 resolve({ email, password });
-              });
-          }).catch(err=>{
+              })
+     //     })
+     .catch(err=>{
             dispatch({ type: FAILD });
             let errorMsg = firebaseErrorCode(err);
             reject(errorMsg);

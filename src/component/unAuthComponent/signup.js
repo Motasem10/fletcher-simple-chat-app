@@ -73,7 +73,7 @@ class SignUp extends Component {
          this.props
              .registerUser(this.state)
              .then(data => {
-               this.props.loginUser(data);
+           this.props.loginUser(data);
              })
            .catch(err => {
              console.log(err);

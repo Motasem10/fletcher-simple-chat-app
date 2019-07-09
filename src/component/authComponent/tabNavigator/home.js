@@ -11,7 +11,7 @@ import {
 } from "native-base";
 import { TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
-import Firebase from "firebase";
+import firebase from "../../../firebase";
 
 import { getFriends, setLastMsg, updateChat } from "../../../action/chatAction";
 
@@ -50,7 +50,7 @@ notificationHandel =(name,msg,image)=>{
       //listen to all friends
 
       friendsUid.forEach(uid => {
-        const ref = Firebase.database().ref(`msg/${reciverUid}/${uid}`);
+        const ref = firebase.database().ref(`msg/${reciverUid}/${uid}`);
         ref.on("value", snapShot => {
           if (snapShot.val()) {
             const msges = Object.values(snapShot.val());
@@ -59,6 +59,7 @@ notificationHandel =(name,msg,image)=>{
             const image =friends[uid].image
             ref.remove();
             this.recivedMsgHandel(msges,uid).then(data=>{
+              console.log('ooo',{data})
             this.notificationHandel(name,data.msg.msg,image);
             this.props.setLastMsg(data.uid, data.msg);
 

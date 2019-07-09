@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import bg from "../../../img/bg.png";
-//import { PermissionsAndroid } from 'react-native'
+
 import {
   View,
   Text,
@@ -11,9 +11,9 @@ import {
   Textarea,
   ActionSheet,
 } from "native-base";
-import firebase from '../../../firebase'
+//import firebase from '../../../firebase'
 import imagePicker from "react-native-image-picker";
-import {  ScrollView,PermissionsAndroid } from "react-native";
+import {  ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   ImageBackground,
@@ -45,15 +45,7 @@ componentWillUnmount(){
   
 }
   handelChoosePhoto = () => {
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,{
-        title:'hellw',
-        message:'sdosdldsd',
-        buttonNeutral:'dsds',
-        buttonNegative:'negative',
-        buttonPositive:'positive'   
-      }
-    )
+  
     ActionSheet.show(
       {
         options: [
