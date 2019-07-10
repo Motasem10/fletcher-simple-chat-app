@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "335441848101",
+    "firebase_url": "https://control-717c0.firebaseio.com",
+    "project_id": "control-717c0",
+    "storage_bucket": "control-717c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335441848101:android:81097553c5413f4a",
+        "android_client_info": {
+          "package_name": "com.fletchers.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335441848101-6an33q57eltt400g35ommm5ipgq8epe8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8lcgHqSeJTpY97eqeyzPaj2wn9LKXA-w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335441848101:android:dd1431e9f0b84944",
+        "android_client_info": {
+          "package_name": "com.fletchers.fletchers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335441848101-6an33q57eltt400g35ommm5ipgq8epe8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8lcgHqSeJTpY97eqeyzPaj2wn9LKXA-w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

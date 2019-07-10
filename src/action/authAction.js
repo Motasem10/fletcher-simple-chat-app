@@ -1,5 +1,4 @@
 import { LOADING, FAILD, GET_ERRORS, SET_CURRENT_USER } from "./ActionType";
-//import rnFirebase from "react-native-firebase";
 import firebase from "../firebase";
 import { AsyncStorage } from "react-native";
 
@@ -46,24 +45,24 @@ import { AsyncStorage } from "react-native";
       .then(user => {
 
         //save image in storge 
-  //      firebase
-    //      .storage()
-      //    .ref("/image/profileimage")
-        //  .child(user.user.uid)
-          //.putFile(image)
-     //     .then(image => {
+       firebase
+         .storage()
+         .ref("/image/profileimage")
+         .child(user.user.uid)
+          .putFile(image)
+         .then(image => {
             //pudh data in DB
    
             firebase
               .database()
               .ref(`users`)
               .child(user.user.uid)
-              .set({ name, email }) //  image.downloadURL })
+              .set({ name, email ,image: image.downloadURL })
               .then(() => {
                 //sign in method
                 resolve({ email, password });
               })
-     //     })
+       })
      .catch(err=>{
             dispatch({ type: FAILD });
             let errorMsg = firebaseErrorCode(err);

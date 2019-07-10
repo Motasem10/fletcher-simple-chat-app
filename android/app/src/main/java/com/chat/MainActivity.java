@@ -1,4 +1,4 @@
-package com.chat;
+package com.fletchers.chat;
 
 import com.facebook.react.ReactActivity;
 

@@ -29,7 +29,7 @@ export default class App extends Component {
     };
   }
   async componentDidMount(){
-
+console.log({app:firebase})
   console.log({store:store.getState()})
   console.log(1);
         AsyncStorage.getItem('USER').then(user=>{

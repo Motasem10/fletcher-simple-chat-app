@@ -44,23 +44,26 @@ notificationHandel =(name,msg,image)=>{
     firebase.notifications().displayNotification(notification);
   }
   listenToNewMsg =async friends => {
+    console.log('listenToNewMsg',friends);
     if (!friends) return;
       const reciverUid = this.props.uid;
       const friendsUid = Object.keys(this.props.friends); // get array of friends  uid
       //listen to all friends
 
       friendsUid.forEach(uid => {
+        console.log({uid,reciverUid})
         const ref = firebase.database().ref(`msg/${reciverUid}/${uid}`);
         ref.on("value", snapShot => {
           if (snapShot.val()) {
+            console.log({friends,s:snapShot.ref})
             const msges = Object.values(snapShot.val());
-            const uid = snapShot.ref.path.pieces_[2];
+            const uid = snapShot.ref.path.split('/')[2];
             const  name =friends[uid].name;
             const image =friends[uid].image
-            ref.remove();
+           ref.remove();
             this.recivedMsgHandel(msges,uid).then(data=>{
               console.log('ooo',{data})
-            this.notificationHandel(name,data.msg.msg,image);
+        //    this.notificationHandel(name,data.msg.msg,image);
             this.props.setLastMsg(data.uid, data.msg);
 
             });
@@ -103,7 +106,10 @@ notificationHandel =(name,msg,image)=>{
   componentDidMount = async () => {
     try {
 //AsyncStorage.removeItem("m0gvBr8dchaxwOmlNB1fM6rMREJ3")
-      const friends = await this.props.getFriends();
+console.log('before getFriends')      
+const friends = await this.props.getFriends();
+console.log('after getFriends')
+      
     await this.listenToNewMsg(friends);
     } catch (err) {
       console.log("error home.js CDM", err);
