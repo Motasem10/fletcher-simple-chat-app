@@ -12,17 +12,20 @@ import {
   import {createStackNavigator,
     createMaterialTopTabNavigator,createAppContainer} from 'react-navigation';
   import Icon from "react-native-vector-icons/MaterialIcons";
-  import Home from './tabNavigator/home';
+  import Chats from './tabNavigator/chats';
+  
   import Chat from './tabNavigator/chat';
   import Status from "./tabNavigator/status";
   import Calls from "./tabNavigator/calls";
 import ChatHeader from './tabNavigator/chatHeader';
 import Model from './tabNavigator/model';
+import Users from './tabNavigator/users';
+import UsersHeader from './tabNavigator/UsersHeader';
 
 const TabNav = createMaterialTopTabNavigator({
   
-    Home: {
-      screen: Home,
+    Chats: {
+      screen: Chats,
       navigationOptions: {}
     },
     Calls: {
@@ -88,6 +91,16 @@ HomeApp: {
           <ChatHeader navigation={navigation}/>
     )
     })
+  },
+  Users:{
+    screen:Users,
+    navigationOptions:({navigation})=>( {
+      header: (
+          <UsersHeader navigation={navigation}/>
+    )
+    })
+  
+
   }
 
 

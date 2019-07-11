@@ -9,13 +9,14 @@ import {
   Thumbnail,
   Content
 } from "native-base";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import firebase from "../../../firebase";
 
 import { getFriends, setLastMsg, updateChat } from "../../../action/chatAction";
 
-class Home extends Component {
+class Chats extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,7 +101,11 @@ notificationHandel =(name,msg,image)=>{
       });
     });
   };
+goToUSersList=()=>{
+  console.log('=++++++++++++++++++======')
+  this.props.navigation.navigate("Users");
 
+}
   componentWillReceiveProps = props => {};
 
   componentDidMount = async () => {
@@ -142,6 +147,7 @@ onPress={() =>{
     data: { uid, name, email, image },
     lastMsg: this.props.setLastMsg
   })}}
+
               style={{ flexDirection: "row" }}
             >
               <Thumbnail source={{ uri: image }} circular />
@@ -191,9 +197,35 @@ onPress={() =>{
   render() {
     return (
       <Container>
-        <Content>
-          <List>{this.renderFriends()}</List>
-        </Content>
+      
+          <View style={{flex:10}}>
+          <ScrollView >
+         {this.renderFriends()}
+     
+          </ScrollView>
+          </View>
+       
+          <View style={{
+            flex:2 ,  backgroundColor: "#20c659",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "flex-end",
+    margin: 10,
+    position:'absolute',
+  //  zIndex:1,
+    bottom:10,
+    right:3,
+    width: 50,
+    height: 50,
+    borderRadius: 50}}>
+         <TouchableOpacity 
+    
+
+          onPress={()=>this.goToUSersList()}>
+            <Icon name="person-add" color="white" size={30} />
+         </TouchableOpacity>
+         </View>
+      
       </Container>
     );
   }
@@ -207,4 +239,4 @@ mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   { getFriends ,setLastMsg, updateChat }
-)(Home);
+)(Chats);

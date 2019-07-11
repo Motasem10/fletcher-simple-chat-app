@@ -10,6 +10,9 @@ import store from "../store";
 get friends from localstorge and update it from firebase
 */
 }
+
+
+
 const getFriends = () => dispatch => {
   return new Promise((resolve, reject) => {
     //   get friends from local storge
@@ -19,7 +22,7 @@ const getFriends = () => dispatch => {
       friends && dispatch({ type: SET_FRIENDS, payload: friends });
       //get friends from databse
 
-     firebase.database().ref('users')
+     firebase.database().ref('friends').child(store.getState().auth.user.uid)
         .on("value", snapShot => {
           //if there are friends in local storge
           if (friends) {
@@ -150,7 +153,7 @@ const sendMsg = msg => dispatch => {
     let old_Msg = oldMsg;
     //add new msg to state (oldMsg array )
 
-    (old_Msg && old_Msg.push(newMsg)) || (old_Msg = [newMsg]);
+    (old_Msg && old_Msg.unshift(newMsg)) || (old_Msg = [newMsg]);
 
   dispatch({ type: UPDATE_CHAT, payload: old_Msg });
 
@@ -169,7 +172,16 @@ const sendMsg = msg => dispatch => {
       .push(newMsg)
       .catch(err => console.error(err));
   });
+  
 };
+
+// const updateFriends=(data)=>{
+// //friends=>id=>{lastMsg,time,name,image}
+// if(data.lastMsg) 
+
+
+// }
+
 //==================================================================
 
 //==================================================================
