@@ -110,6 +110,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+          multiDexEnabled true
     }  
      signingConfigs {
         release {
@@ -167,6 +168,8 @@ dependencies {
 
   implementation "com.google.firebase:firebase-database:17.0.0"
     implementation "com.google.firebase:firebase-storage:17.0.0"
+    implementation "com.google.firebase:firebase-firestore:19.0.0"
+}
 
 
 }
