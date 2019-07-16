@@ -14,7 +14,7 @@ import { TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import firebase from "../../../firebase";
 
-import { getFriends, setLastMsg, updateChat } from "../../../action/chatAction";
+import { getFriends, setLastMsg, updateChat,saveMsgInLocalStore } from "../../../action/chatAction";
 
 class Chats extends Component {
   constructor(props) {
@@ -62,6 +62,7 @@ notificationHandel =(name,msg,image)=>{
             const  name =friends[uid].name;
             const image =friends[uid].image
            ref.remove();
+           console.log({msges})
             this.recivedMsgHandel(msges,uid).then(data=>{
               console.log('ooo',{data})
         //    this.notificationHandel(name,data.msg.msg,image);
@@ -76,28 +77,26 @@ notificationHandel =(name,msg,image)=>{
       });
     });
   };
-  recivedMsgHandel = (msg, uid) => {
+  recivedMsgHandel = (msgArr, uid) => {
     return new Promise(resolve => {
-      const keys = Object.keys(msg);
-      keys.reverse();
-      let msgArr = [];
-      keys.forEach(key => {
-        msgArr.push(msg[key]);
-      });
+      console.log({msgArr})
 
       AsyncStorage.getItem(uid).then(old => {
         const OldChat = JSON.parse(old);
-
+        console.log('chats.js',{OldChat})
         //if it is the first chat
-        if (!OldChat) {
+        if (!OldChat.lastChat) {
           AsyncStorage.setItem(uid, JSON.stringify(msgArr)); //if it is the first msg from new friend
         } else {
-          const concatedChat = OldChat.concat(msgArr);
+          const concatedChat = msgArr.concat(OldChat.lastChat);
           this.props.updateChat(concatedChat, uid);
-          AsyncStorage.setItem(uid, JSON.stringify(concatedChat));
+AsyncStorage.getItem(uid).then(id=>{
+  
+       saveMsgInLocalStore(uid,concatedChat,concatedChat[0],JSON.parse(id).numberOfDoc ,1) 
+})     
         }
 
-        return resolve({ msg: msgArr[msgArr.length - 1], uid });
+        return resolve({ msg: msgArr[0], uid });
       });
     });
   };
@@ -201,12 +200,10 @@ onPress={() =>{
           <View style={{flex:10}}>
           <ScrollView >
          {this.renderFriends()}
-     
           </ScrollView>
           </View>
-       
           <View style={{
-            flex:2 ,  backgroundColor: "#20c659",
+    flex:2 ,  backgroundColor: "#20c659",
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "flex-end",
@@ -218,14 +215,11 @@ onPress={() =>{
     width: 50,
     height: 50,
     borderRadius: 50}}>
-         <TouchableOpacity 
-    
-
+      <TouchableOpacity 
           onPress={()=>this.goToUSersList()}>
             <Icon name="person-add" color="white" size={30} />
          </TouchableOpacity>
          </View>
-      
       </Container>
     );
   }
@@ -240,3 +234,6 @@ export default connect(
   mapStateToProps,
   { getFriends ,setLastMsg, updateChat }
 )(Chats);
+
+
+

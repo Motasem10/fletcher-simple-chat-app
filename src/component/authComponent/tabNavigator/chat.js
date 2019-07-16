@@ -38,7 +38,7 @@ class Chat extends Component {
     super(props);
     this.state = {
       msg: "",
-      oldMsg: "",
+      lastChat: "",
       start:0,
       end:0
 
@@ -191,8 +191,9 @@ class Chat extends Component {
   }
 
   render() {
-console.log({oldMsg:this.props.oldMsg})
-let data=this.props.oldMsg?this.props.oldMsg:[]
+
+let data=this.props.lastChat?this.props.lastChat:[];
+console.log({lastChat:this.props.lastChat,data});
     return (
       <Container>
         <ImageBackground source={bg} style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -203,7 +204,7 @@ let data=this.props.oldMsg?this.props.oldMsg:[]
              this.scrollView.scrollToEnd({ animated: true });
             }}
           > */}
-          <FlatList data={data.slice(0,3)}
+          <FlatList data={data}
 
             initialNumToRender={3}
             ref={ref => this.ScrollView = ref}
@@ -357,7 +358,7 @@ mapStateToProps = state => {
   return {
     auth: state.auth,
     msg: "",
-    oldMsg: state.chat.oldMsg && state.chat.oldMsg.reverse(),
+    lastChat: state.chat.lastChat ,//&& state.chat.lastChat.reverse(),
     url: state.chat.url,
     uri: state.chat.uri,
     path: state.chat.path,

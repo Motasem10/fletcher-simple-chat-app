@@ -1,7 +1,9 @@
 import firebase from "../firebase";
 import { AsyncStorage } from "react-native";
-import { SET_FRIENDS, SET_OLD_CHAT_FOR_USER, UPDATE_CHAT } from "./ActionType";
+import { SET_FRIENDS, SET_OLD_CHAT_FOR_USER, UPDATE_CHAT,INCREMENT_DOC } from "./ActionType";
 import store from "../store";
+const  MSG_LIMIT =15;
+
 //import firebase from "react-native-firebase";
 //___________________________________________________
 
@@ -10,9 +12,6 @@ import store from "../store";
 get friends from localstorge and update it from firebase
 */
 }
-
-
-
 const getFriends = () => dispatch => {
   return new Promise((resolve, reject) => {
     //   get friends from local storge
@@ -22,7 +21,7 @@ const getFriends = () => dispatch => {
       friends && dispatch({ type: SET_FRIENDS, payload: friends });
       //get friends from databse
 
-     firebase.database().ref('friends').child(store.getState().auth.user.uid)
+      firebase.database().ref('users')
         .on("value", snapShot => {
           //if there are friends in local storge
           if (friends) {
@@ -106,8 +105,43 @@ const addToHeadOfObject = (obj, key) => {
   return Object.assign(newObj, obj);
 };
 //================================================================
-const saveMsgInLocalStore = (uid, allMsg) => {
-  AsyncStorage.setItem(uid, JSON.stringify(allMsg));
+const saveMsgInLocalStore = (uid, allMsg, msg, numberOfDoc,numberOfLoodingDoc) => {
+
+  console.log('saveMsgInLocalStore', { uid, allMsg, msg, numberOfDoc,numberOfLoodingDoc })
+  console.log(' if(allMsg>=3)', allMsg.length >= MSG_LIMIT &&  (allMsg.length/ numberOfLoodingDoc)>=MSG_LIMIT  );
+  console.log('(allMsg.slice(0,MSG_LIMIT))',[allMsg.length, numberOfLoodingDoc
+  ]);
+
+  if (allMsg.length >= MSG_LIMIT &&  (allMsg.length/ numberOfLoodingDoc) >=MSG_LIMIT   ) {
+
+
+    console.log('saveMsgInLocalStore', { uid, allMsg, msg, numberOfDoc })
+console.log(`create new Doc`)
+    AsyncStorage.multiSet([
+      [uid + (Number(numberOfDoc)+1),  JSON.stringify(allMsg.slice(0,MSG_LIMIT) ) ],
+      [uid, JSON.stringify({ lastChat: [msg], numberOfDoc:Number(numberOfDoc)+1 })]
+   ])
+    .catch(err => {
+      console.error({ err })
+     
+    })
+    let payload={
+      numberOfDoc:Number(numberOfDoc)+1,
+      numberOfLoodingDoc:numberOfLoodingDoc+1,
+    }
+    console.log({payload});
+    //dispatch aldMsg
+   store.dispatch({
+      type:INCREMENT_DOC,
+      payload,
+    })
+
+  } else {
+  AsyncStorage.setItem(uid, JSON.stringify({ lastChat: allMsg, numberOfDoc }));
+  }
+
+
+
 };
 //=================================================================
 //get time ex=> 13:05
@@ -134,7 +168,7 @@ const uploadImg = msg => {
         .ref(`msg/${reciverUid}`)
         .child(senderUid)
         .push(msg)
-        .then(saved => {});
+        .then(saved => { });
     })
     .catch(err => console.log("err", err));
 };
@@ -145,19 +179,19 @@ const sendMsg = msg => dispatch => {
     (temporarily) i will use promise to change state in component to update it  
     */
     //get current  conversition data
-    const { reciverUid, senderUid, oldMsg } = store.getState().chat;
+    const { reciverUid, senderUid, lastChat, numberOfDoc,numberOfLoodingDoc } = store.getState().chat;
     if (msg.msg.length < 1 && msg.msg.uri < 1) return; //if empty msg
     const time = getTime();
     //addtime and   mine=true  means i send it
     let newMsg = { ...msg, time, mine: true };
-    let old_Msg = oldMsg;
-    //add new msg to state (oldMsg array )
+    let old_Msg = lastChat;
+    //add new msg to state (lastChat array )
 
     (old_Msg && old_Msg.unshift(newMsg)) || (old_Msg = [newMsg]);
 
-  dispatch({ type: UPDATE_CHAT, payload: old_Msg });
+    dispatch({ type: UPDATE_CHAT, payload: old_Msg });
 
-    saveMsgInLocalStore(reciverUid, old_Msg);
+    saveMsgInLocalStore(reciverUid, old_Msg, newMsg, numberOfDoc,numberOfLoodingDoc);
     //resolve it in chat.js to  add it as alast Msg
     resolve(newMsg);
 
@@ -166,35 +200,74 @@ const sendMsg = msg => dispatch => {
     if (msg.uri) return uploadImg(newMsg); //upload image  get url of image in  firebase storge
     //if it was text-msg(not img )
 
-  firebase.database()
+    firebase.database()
       .ref(`msg/${reciverUid}`)
       .child(senderUid)
       .push(newMsg)
       .catch(err => console.error(err));
   });
-  
 };
-
-// const updateFriends=(data)=>{
-// //friends=>id=>{lastMsg,time,name,image}
-// if(data.lastMsg) 
-
-
-// }
-
 //==================================================================
 
 //==================================================================
 const prepareSenderReciverChat = reciverUid => dispatch => {
+  AsyncStorage.getAllKeys().then(allKey => {
+    console.log({ allKey });
+
+    allKey.forEach(k => {
+      if (k.length > 13) {
+      //AsyncStorage.removeItem(k)
+        AsyncStorage.getItem(k)
+       .then(e => {
+          console.log(`---${k}---`, JSON.parse(e));
+        })
+
+      }
+    })
+
+  })
   const senderUid = store.getState().auth.user.uid;
-  console.log({auth:store.getState()})
-  //get old mag
+ 
+  
+  //get old msg       
   AsyncStorage.getItem(reciverUid).then(user => {
-    console.log("prepareSenderReciverChat", { senderUid });
-    dispatch({
-      type: SET_OLD_CHAT_FOR_USER,
-      payload: { senderUid, reciverUid, oldMsg: user ? JSON.parse(user) : null }
-    });
+    user = JSON.parse(user);
+    console.log({ user })
+    if (!user) {
+      console.log('not seeeeeeeeeeeeeeeeeeeeeeeeeeen')
+      let newUser = { numberOfDoc: 0, lastChat: [] }
+      console.log('create new user in  AsyncStorage', { newUser });
+
+      AsyncStorage.setItem(reciverUid, JSON.stringify(newUser));
+      return dispatch({
+        type: SET_OLD_CHAT_FOR_USER,
+        payload: { senderUid, reciverUid, ...newUser }
+      });
+    }
+
+    console.log({ user });
+    console.log('lastChat<10 && numberOfDoc>0', user.lastChat.length < 3 );
+    
+    if (user.lastChat.length <=MSG_LIMIT && user.numberOfDoc > 0 ) {// becouse chat will be very short add  new doc
+      console.log('not seeeeeeeeeeeeeeeeeeeeeeeeeeen')
+      AsyncStorage.getItem(reciverUid+user.numberOfDoc).then(extraMsg => {
+
+        lastChat={...JSON.parse(extraMsg), ...user.lastChat} ;
+        console.log('user.lastChat',{lastChat} )
+
+         dispatch({
+        type: SET_OLD_CHAT_FOR_USER,
+        payload: { senderUid, reciverUid, lastChat:Object.values(lastChat), numberOfDoc: user.numberOfDoc,numberOfLoodingDoc:2 }
+      });
+
+      })
+    } else {
+
+      dispatch({
+        type: SET_OLD_CHAT_FOR_USER,
+        payload: { senderUid, reciverUid, lastChat: user.lastChat, numberOfDoc: user.numberOfDoc,numberOfLoodingDoc:1 }
+      });
+    }
   });
 };
 //==================================================================
@@ -226,3 +299,4 @@ module.exports.sendMsg = sendMsg;
 module.exports.prepareSenderReciverChat = prepareSenderReciverChat;
 module.exports.choosePhoto = choosePhoto;
 module.exports.updateChat = updateChat;
+module.exports.saveMsgInLocalStore=saveMsgInLocalStore;

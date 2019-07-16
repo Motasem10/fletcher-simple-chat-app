@@ -14,4 +14,4 @@ export const UPDATE_CHAT ='UPDATE_CHAT'
 export const SET_OLD_CHAT_FOR_USER='SET_OLD_CHAT_FOR_USER'
               //SET_OLD_CHAT_FOR_USE
 export const SET_URI ='SET_URI'
-//export const UPDATE_CHAT='UPDATE_CHAT'
+export const INCREMENT_DOC='INCREMENT_DOC'

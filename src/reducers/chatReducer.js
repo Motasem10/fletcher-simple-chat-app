@@ -3,14 +3,17 @@ import {
   SET_LAST_MSG,
   UPDATE_CHAT,
   SET_OLD_CHAT_FOR_USER,
-  SET_URI
+  SET_URI,
+  INCREMENT_DOC
 } from "../action/ActionType";
 
 const initialState = {
   friends: null,
-  oldMsg: null,
+  lastChat: null,
   senderUid: null,
-  reciverUid: null
+  reciverUid: null,
+  numberOfDoc:0, // every doc has some msg 
+  numberOfLoodingDoc:1,
 };
 
 export default function(state = initialState, action) {
@@ -21,10 +24,13 @@ export default function(state = initialState, action) {
     case SET_LAST_MSG: //set last msg to render it in home page
       return { ...state, friends: action.payload };
     case SET_OLD_CHAT_FOR_USER: 
-      const { senderUid, reciverUid, oldMsg } = action.payload;
-      return { ...state, senderUid, reciverUid, oldMsg };
-    case UPDATE_CHAT:
-      return { ...state, oldMsg: action.payload };
+      const { senderUid, reciverUid, lastChat,numberOfLoodingDoc } = action.payload;
+      return { ...state, senderUid, reciverUid, lastChat,numberOfLoodingDoc };
+      case UPDATE_CHAT:
+      return { ...state, lastChat: action.payload };
+
+      case INCREMENT_DOC:
+        return { ...state, ...action.payload };
     default:
       return state;
   }
