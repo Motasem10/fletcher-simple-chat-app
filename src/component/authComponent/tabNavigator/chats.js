@@ -14,7 +14,7 @@ import { TouchableOpacity, ScrollView, AsyncStorage } from "react-native";
 import { connect } from "react-redux";
 import firebase from "../../../firebase";
 
-import { getFriends, setLastMsg, updateChat,saveMsgInLocalStore } from "../../../action/chatAction";
+import { getFriends, setLastMsg, updateChat,saveMsgInLocalStore,getDate } from "../../../action/chatAction";
 
 class Chats extends Component {
   constructor(props) {
@@ -184,7 +184,7 @@ onPress={() =>{
                   alignItems: "flex-end"
                 }}
               >
-                <Text>{friend.lastMsg ? friend.lastMsg.time : ""}</Text>
+                <Text>{friend.lastMsg ? getDate(friend.lastMsg.time).time : ""}</Text>
               </View>
             </TouchableOpacity>
           </ListItem>

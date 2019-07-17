@@ -10,6 +10,7 @@ import {
   CardItem,
   Textarea,
   ActionSheet,
+  Spinner,
 } from "native-base";
 //import firebase from '../../../firebase'
 import imagePicker from "react-native-image-picker";
@@ -19,7 +20,7 @@ import {
   ImageBackground,
   StyleSheet,
   FlatList,
-  ScrollView,
+AsyncStorage,
   Image,
   TouchableWithoutFeedback
 } from "react-native";
@@ -27,25 +28,29 @@ import {
 import { connect } from "react-redux";
 import {
   sendMsg,
+  getDate,
   prepareSenderReciverChat,
-  choosePhoto
+  choosePhoto,
+  loadMore,
 } from "../../../action/chatAction";
+import store from "../../../store";
 
 
 class Chat extends Component {
   constructor(props) {
 
     super(props);
+  ///  this.onEndReachedDuringMomentum=true;
     this.state = {
       msg: "",
       lastChat: "",
       start:0,
-      end:0
+      end:0,
+      loading:true
 
     };
   }
   componentWillUnmount() {
-
 
   }
   handelChoosePhoto = () => {
@@ -99,44 +104,41 @@ class Chat extends Component {
   };
 
 
-
-
-
-
-  componentDidMount = async () => {
-
+  componentDidMount =async  () => {
+  
     //get uid from home.js 
     const reciverUid = this.props.navigation.getParam("data").uid;
     //get old MSg 
     await this.props.prepareSenderReciverChat(reciverUid);
 
-
-  };
+};
 
   handelSendMsg = () => {
+
     const msg = this.state.msg;
     if (msg.length < 1) return
-    this.setState({ msg: '' })
+    this.setState({ msg: '' });
     const reciverUid = this.props.navigation.getParam("data").uid;
     const senderUid = this.props.senderUid;
     console.log({ senderUid, reciverUid, p: this.props })
     this.props.sendMsg({ msg }).then(msg => {
       this.props.navigation.getParam('lastMsg')(this.props.reciverUid, msg)
     });
-    console.log({ senderUid, reciverUid })
+    console.log({ senderUid, reciverUid,t:this });
+    this.ScrollView.scrollToOffset({animated:true,offset:0});
+    //scrollToIndex({animated:true,index:0,viewOffset:0,viewPosition:0})
     // firebase.database()
     //.ref(`msg/${reciverUid}`)
     //.child(senderUid)
     // .push(msg)
     //.catch(err => console.error(err));
 
-
   };
 
   RendrChat = (item) => {
     if (item.mine) {
       return (
-        <View key={Math.random()} style={item.uri ? styles.Image : styles.sendMsg} >
+        <View key={item.time} style={item.uri ? styles.Image : styles.sendMsg} >
           {item.uri && (
             <Card >
               <CardItem cardBody >
@@ -157,13 +159,13 @@ class Chat extends Component {
             <Text style={{ alignSelf: "flex-start" }}>{item.msg}</Text>
           ) : null}
           <Text style={{ fontSize: 10, alignSelf: "flex-end" }}>
-            {item.time}
+            {getDate(item.time ).time}
           </Text>
         </View>
       );
     } else {
       return (
-        <View key={Math.random()} style={item.uri ? styles.Imagerecived : styles.resevedMsg} >
+        <View key={item.time} style={item.uri ? styles.Imagerecived : styles.resevedMsg} >
           {item.url && (//if msg content image 
             <Card >
               <CardItem cardBody >
@@ -182,13 +184,44 @@ class Chat extends Component {
             <Text style={{ alignSelf: "flex-start" }}>{item.msg}</Text>
           ) : null}
           <Text style={{ fontSize: 10, alignSelf: "flex-end" }}>
-            {item.time}
+            {getDate(item.time).time }
           </Text>
         </View>
       );
 
     }
   }
+  componentWillReceiveProps(props,props1){
+    console.log({props,props1})
+  }
+
+loadMore=()=>{
+  console.log('================\n LOOOOOOOOOOOD \n ++++++++++++++++++')
+  const {numberOfDoc,numberOfLoodingDoc,reciverUid}=this.props;
+
+  if(numberOfDoc>=numberOfLoodingDoc){
+this.setState({loading:true});
+
+    AsyncStorage.getItem(reciverUid+(numberOfDoc-(numberOfLoodingDoc-1))).then(chat=>{
+  if(!chat) retur
+ 
+  let payload={numberOfLoodingDoc:numberOfLoodingDoc+1,lastChat:[...this.props.lastChat,...JSON.parse(chat)] }
+   
+    return   this.props.loadMore(payload);
+ 
+  
+    
+  })
+}else{ //its mean this is start of chat 
+this.setState({loading:false})
+}
+
+} 
+componentWillUnmount(){
+  console.log('=========componentWillUnmount=============');
+  getDate(new Date().getTime())
+  store.dispatch({type:'SET_OLD_CHAT_FOR_USER',payload:{numberOfLoodingDoc:1,numberOfDoc:0,lastChat:[]}})
+}
 
   render() {
 
@@ -204,28 +237,60 @@ console.log({lastChat:this.props.lastChat,data});
              this.scrollView.scrollToEnd({ animated: true });
             }}
           > */}
+          <View >
           <FlatList data={data}
-
-            initialNumToRender={3}
+ // onResponderEnd={()=>console.log('======== render END')}
+           // onScrollToIndexFailed={(index)=>{console.log(index)}
+           onEndReachedThreshold={0.01}
+           onEndReached={()=>{
+        //     console.log({distanceFromEnd})
+        //     if(this.onEndReachedDuringMomentum){
+             this.loadMore()
+           // this.onEndReachedDuringMomentum=true; 
+          //  }
+            }}
+       //   onMomentumScrollBegin={({})=>{
+         //   console.log('onMomentumScrollBegin');
+           // this.onEndReachedDuringMomentum=false;
+         // }}
+            initialNumToRender={20
+            }
             ref={ref => this.ScrollView = ref}
             inverted={false}
             style={{ transform: [{ scaleY: -1 }] }}
-            renderItem={({ item, index }) => (
-              <View style={{ transform: [{ scaleY: -1 }] }}>
+            renderItem={({ item, index }) =>{
+
+            return(
+              <View style={{ transform: [{ scaleY: -1 }]}}>
                 {this.RendrChat(item)}
               </View>
-            )}
+            )}}
             ListHeaderComponent={() =>
               (<View on style={{ marginBottom: 70 }}></View>)
             }
-            //    onLayout={
-            //()=>this.ScrollView.scrollToEnd({animated:false})
-            //  }
             extraData={(item, index) => console.log({ item, index })}
+            ListFooterComponent={()=>{
+if(this.state.loading==='') (<Text></Text>)
+             else if(this.state.loading){
 
+               return (<Spinner></Spinner>)
+              }
+            return (<View style={{
+              
+              transform:[{scaleY:-1}],
+            justifyContent:'flex-start',
+            alignItems:'flex-start',
+            margin:10,
+            }}><Badge style={{backgroundColor:'#2c8807',padding:20,alignSelf:'center'}}><Text>start</Text></Badge></View>)
+            }
+            
+            }
+          //  ListEmptyComponent={()=>(<Text>empty</Text>)}
+            
           >
 
           </FlatList>
+          </View>
           <View style={{ flex: 10 }}>
 
 
@@ -362,14 +427,17 @@ mapStateToProps = state => {
     url: state.chat.url,
     uri: state.chat.uri,
     path: state.chat.path,
+   // chatData:state.chat,
+    numberOfDoc:state.chat.numberOfDoc,
+    numberOfLoodingDoc: state.chat.numberOfLoodingDoc,
     senderUid: state.chat.senderUid,
     reciverUid: state.chat.reciverUid,
     friends: state.chat.friends,
   };
-};
+};0
 export default connect(
   mapStateToProps,
-  { prepareSenderReciverChat, sendMsg }
+  { prepareSenderReciverChat, sendMsg,loadMore }
 )(Chat);
 
 //export default Chat;

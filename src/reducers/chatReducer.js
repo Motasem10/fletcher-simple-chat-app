@@ -24,13 +24,16 @@ export default function(state = initialState, action) {
     case SET_LAST_MSG: //set last msg to render it in home page
       return { ...state, friends: action.payload };
     case SET_OLD_CHAT_FOR_USER: 
-      const { senderUid, reciverUid, lastChat,numberOfLoodingDoc } = action.payload;
-      return { ...state, senderUid, reciverUid, lastChat,numberOfLoodingDoc };
+     // const { senderUid, reciverUid, lastChat,numberOfLoodingDoc } = action.payload;
+   
+      return { ...state, ...action.payload };
       case UPDATE_CHAT:
       return { ...state, lastChat: action.payload };
 
       case INCREMENT_DOC:
         return { ...state, ...action.payload };
+
+      
     default:
       return state;
   }
