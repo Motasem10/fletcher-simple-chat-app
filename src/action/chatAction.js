@@ -26,14 +26,15 @@ const getFriends = () => dispatch => {
         .on("value", snapShot => {
           //if there are friends in local storge
           if (friends) {
-            editUpdatedFriendsList(snapShot.val(), friends).then(
-              newFriendList => {
+         //   editUpdatedFriendsList(snapShot.val(), friends).then(
+              newFriendList={...snapShot.val(),...friends} 
+              //=> {
                 AsyncStorage.setItem("Friends", JSON.stringify(newFriendList));
                 dispatch({ type: SET_FRIENDS, payload: newFriendList });
                 //resolve it to listentNewMasseage
                 resolve(newFriendList);
-              }
-            );
+         //     }
+        //    );
           } else {
             AsyncStorage.setItem("Friends", JSON.stringify(snapShot.val()));
             dispatch({ type: SET_FRIENDS, payload: snapShot.val() });

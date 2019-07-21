@@ -1,7 +1,7 @@
 import { LOADING, FAILD, GET_ERRORS, SET_CURRENT_USER } from "./ActionType";
 import firebase from "../firebase";
 import { AsyncStorage } from "react-native";
-
+import locale from '../locale'
 
  const loginUser = userData => dispatch => {
   dispatch({ type: GET_ERRORS, payload: {} });//remove error from login
@@ -88,7 +88,7 @@ import { AsyncStorage } from "react-native";
 
 const firebaseErrorCode = err => {
   let errorMsg = {};
-console.log({err:err.code});
+console.log({err:err});
   switch (err.code) {
     case "auth/network-request-failed":
       errorMsg.connection =
@@ -107,12 +107,13 @@ console.log({err:err.code});
       errorMsg.email = locale.error["email-already-in-use"];
       break;
     case "auth/weak-password":
-      errorMsg.password = locale.error.weak-password;
+      errorMsg.password = locale.error["weak-password"];
       break;
       case "auth/user-not-found":
-       err.email=locale.error.user-not-found; 
+       errorMsg.email=locale.error["user-not-found"]; 
+       break;
     case 'auth/wrong-password':
-      errorMsg.password=locale.error.wrong-password;
+      errorMsg.password=locale.error["wrong-password"];
       default:
       errorMsg.err = locale.error.unknown;
   }

@@ -29,14 +29,16 @@ export default class App extends Component {
     };
   }
   async componentDidMount(){
-console.log({app:firebase});
-  console.log({store:store.getState()})
+console.log('componentDidMount',this.state.isAuth)
+ 
   console.log(1);
         AsyncStorage.getItem('USER').then(user=>{
         if(!user) {
-          console.log(2);
+        
           this.setState({isAuth:false})
+          console.log(2,this.state.isAuth.isAuth);
           firebase.auth().signOut();
+
         }
       // this.setState({isAuth:true})
       if(user) {this.setState({isAuth:true});
@@ -73,7 +75,7 @@ console.log('usssser',{user:JSON.parse(user)})
           return this.state.isAuth ?
           //home & chat & calls
           (
-            <UnAuthComponent />
+            <RootNavigator />
           ) ://login & signup
            (
             <UnAuthComponent reload={this.reload} />
@@ -82,7 +84,7 @@ console.log('usssser',{user:JSON.parse(user)})
       }
 
   render() {
-
+    console.log({store:store.getState()})
     return (
       <Provider store={store}>
     <Root>{this.renderNavigator()}</Root></Provider>

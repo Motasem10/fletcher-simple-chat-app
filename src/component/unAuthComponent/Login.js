@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   textInput:{
     textAlign:isRtl?'right':'left',
-    transform: [{ scaleX: isRtl ? -1 : 1 }]
+   // transform: [{ scaleX: isRtl ? -1 : 1 }]
       },
       rtlIcon: {
         color: isRtl ? 'green' : 'white'

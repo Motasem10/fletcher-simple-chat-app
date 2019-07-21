@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import firebase from "../../../firebase";
 
 import { getFriends, setLastMsg, updateChat, saveMsgInLocalStore, getDate } from "../../../action/chatAction";
-
+import unknown from '../../../img/unknown.jpg' 
 
 class Chats extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class Chats extends Component {
 
     const notification = new firebase.notifications.Notification()
       .setTitle('FLETCHERS')
-      .setBody('new masseage ').setData({ largeIcon: 'logo' })
+      .setBody('new masseage ').setData({ largeIcon:'logo' })
       .setNotificationId('notification-action')
       .setSound('default')
       .android.setChannelId('notification-action')
@@ -56,11 +56,11 @@ class Chats extends Component {
         if (snapShot.val()) {
           const msges = Object.values(snapShot.val());
           const uid = snapShot.ref.path.split('/')[2];
-          //      const  name =friends[uid].name;
-          //        const image =friends[uid].image
+               const  name =friends[uid].name;
+                const image =friends[uid].image
           ref.remove();
           this.recivedMsgHandel(msges, uid).then(data => {
-            //    this.notificationHandel(name,data.msg.msg,image);
+             this.notificationHandel(name,data.msg.msg,image);
             this.props.setLastMsg(data.uid, data.msg);
 
           });
@@ -90,32 +90,40 @@ class Chats extends Component {
   };
   goToUSersList = () => this.props.navigation.navigate("Users");
   componentDidMount = async () => {
- AsyncStorage.getAllKeys().then(k=>{
-   k.forEach(d=>{
-     AsyncStorage.getItem(d).then(user=>{
 
-       console.log(`user`,JSON.parse(user));
-     })
-   })
-
-
-})
-    const friends = await this.props.getFriends();
-    await this.listenToNewMsg(friends);
+    AsyncStorage.getItem('Friends').then(e=>{
+      console.log({e:JSON.parse(e)});
+    })
+console.log('pefore get users');
+  const friends = await this.props.getFriends();
+  // await this.listenToNewMsg(friends);
+   console.log('after it');
   };
 
 
 
   renderFriends = () => {
-    let index = -1; //index for uid
+    
+  //  let index = -1; //index for uid
     const { friends } = this.props;
     if (friends) {
       //if there are friends in state
-      const uidArray = Object.keys(friends);
-      return Object.values(friends).map(friend => {
-        index++;
-        const uid = uidArray[index];
-        const { name, email, image } = friend;
+      let sortedFriends=[];
+      for(e in  friends){
+        sortedFriends.push([e,friends[e]]);
+        } 
+      sortedFriends.sort((a,b)=>{
+        if(a[1].lastMsg && b[1].lastMsg)
+        return b[1].lastMsg.time-a[1].lastMsg.time
+        
+      })
+      
+     // const uidArray = Object.keys(friends);
+//onsole.log({sortedFriends});
+      return sortedFriends.map(friend => {
+    //    index++;
+        const uid = friend[0]
+        const { name, email, image } = friend[1];
 
         return (
           <ListItem key={uid}
@@ -134,7 +142,7 @@ class Chats extends Component {
 
               style={{ flexDirection: "row" }}
             >
-              <Thumbnail source={{ uri: image }} circular />
+              <Thumbnail source={image? { uri: image } : unknown } circular />
               <View style={{ flexDirection: "column", justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left', marginLeft: 10 }}>
                 <View>
                   <Text style={{ fontWeight: "bold", marginLeft: 2 }}>
@@ -155,10 +163,10 @@ class Chats extends Component {
                     flexGrow: 1
                   }}
                 >
-                  {friend.lastMsg
-                    ? friend.lastMsg.msg && friend.lastMsg.msg.length > 15
-                      ? friend.lastMsg.msg.slice(0, 15)
-                      : friend.lastMsg.msg
+                  {friend[1].lastMsg
+                    ? friend[1].lastMsg.msg && friend[1].lastMsg.msg.length > 15
+                      ? friend[1].lastMsg.msg.slice(0, 15)
+                      : friend[1].lastMsg.msg
                     : ""}
                 </Text>
               </View>
@@ -169,7 +177,7 @@ class Chats extends Component {
                   alignItems: "flex-end"
                 }}
               >
-                <Text>{friend.lastMsg ? getDate(friend.lastMsg.time).time : ""}</Text>
+                <Text>{friend[1].lastMsg ? getDate(friend[1].lastMsg.time).time : ""}</Text>
               </View>
             </TouchableOpacity>
           </ListItem>
