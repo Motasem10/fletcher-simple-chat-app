@@ -9,7 +9,8 @@ import isRtl from '../../isRTL';
   constructor(props) {
     super(props);
     this.state = {
-      scrollTo: { x: 0, y: 0, animated: true }
+      scrollTo: { x: 0, y: 0, animated: true },
+      width:Dimensions.get("window").width
     };
   }
   goToRegisterPage = () => {
@@ -18,13 +19,19 @@ import isRtl from '../../isRTL';
   };
 
 onLayout=()=>{
-  console.log('sssssssss');
+ this.setState({width:Dimensions.get("window").width})
 }
-
+firstOnlayoutCalled=false;
   render() {
       return (
       <ScrollView
-      onLayout={this.onLayout}
+      onLayout={()=>{
+        if(this.firstOnlayoutCalled){
+          this.onLayout();}
+      else{
+        this.firstOnlayoutCalled=true;
+      }
+      }}
       contentContainerStyle={{flexGrow:1,justifyContent:'center',}}
         ref={scroll => (this.scroller = scroll)}
         scrollTo={this.state.scrollTo}
@@ -32,11 +39,10 @@ onLayout=()=>{
         pagingEnabled={true}
         showHorizontalScrollIndecator={true}
       >
-        <View style={styles.view}>
+        <View style={{...styles.view ,width:this.state.width}}>
           <Login goToRegisterPage={this.goToRegisterPage.bind(this)} />
         </View>
-
-        <View style={styles.view}>
+        <View style={{...styles.view ,width:this.state.width}}>
           <SignUp />
         </View>
       </ScrollView>
