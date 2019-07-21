@@ -65,9 +65,10 @@ console.log('usssser',{user:JSON.parse(user)})
       }
 
       renderNavigator() {
+      //  return(<SpinnerScreen/>);
         //loading
         if (this.state.isAuth === null) {
-          return <SpinnerScreen />;
+          return <SpinnerScreen />
         } else {
           return this.state.isAuth ?
           //home & chat & calls
@@ -84,17 +85,7 @@ console.log('usssser',{user:JSON.parse(user)})
 
     return (
       <Provider store={store}>
-    <Root>
-   {
-     
-     this.state.isAuth==null?<SpinnerScreen></SpinnerScreen> :
-     this.state.isAuth?
-<RootNavigator></RootNavigator>: <UnAuthComponent></UnAuthComponent>
-   }
-
-
-      </Root>
-      </Provider>
+    <Root>{this.renderNavigator()}</Root></Provider>
     );
   }
 }

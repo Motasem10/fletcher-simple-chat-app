@@ -1,0 +1,43 @@
+{
+    "auth": {
+        "appName": "Fletcherss",
+        "loginButton": "Login ",
+        "signupButton": "Sign Up",
+        "email": "E-mail",
+        "password": "Password",
+        "createAccount": "Create new account",
+        "name": "Name",
+        "password2": "Confirm password",
+        "image": "Image",
+        "uploaded": "Image uploaded"
+    },
+    "profile": {
+        "chats": "Chats",
+        "calls": "Calls",
+        "status": "Status",
+        "selectContact": " add contact ",
+        "now":"just now",
+       "camera":"Camera",
+       "galary":"Galary",
+       "cancel":"Cancel"
+    },
+    "status": {
+        "myStatus": "my status",
+        "recent": "recent updates",
+        "viewed": "viewed"
+    },
+    "error": {
+        "connection": "plaeas check your internet connection and try again",
+        "invalid-email": "invalid mail",
+        "email-already-in-use": "E-mail aledy use",
+        "weak-password": "week passwoed",
+        "user-not-found": "no user has this mail",
+        "wrong-password": "wrong password",
+        "unknown": "unknown error",
+        "emailRequired": "email is required",
+        "passwordRequired": "password required",
+        "nameLength": "Name length must be between 3 ,15",
+        "photo": "please choose photo",
+        "password2": "confirm paswword is required"
+    }
+}

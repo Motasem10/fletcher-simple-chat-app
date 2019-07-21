@@ -10,10 +10,9 @@ import {
   Content
 } from "native-base";
 import { TouchableOpacity,AsyncStorage,StyleSheet } from "react-native";
-
 import { connect } from "react-redux";
 
-import { getFriends, setLastMsg, updateChat } from "../../../action/chatAction";
+import {  setLastMsg } from "../../../action/chatAction";
 
 
 
@@ -43,29 +42,18 @@ friends={friends,...friends,...friends}
   }
 
   componentDidMount = async () => {
-    try {
-console.log( 
-'componentDidMount users.js'
-);
 const users = await this.getUsers();
 //pass number of users to Users header
-//this.props.navigation.navigate('Chat',{Users:Object.keys(users).length})
-    console.log('componentDidMount')
+//this.props.navigation.navigate('Chat',{Users:Object.keys(users).length});
 this.setState({users});
-    } catch (err) {
-     console.log('serrrrrrrr',{err,this:this}) 
-      
-    }
+
   };
 
 
 
   renderusers = () => {
     let index = -1; //index for uid
-
-
- let  users = this.state.users
- console.log({users});
+ let  users = this.state.users;
     if (users) {
       //if there are users in state
       const uidArray = Object.keys(users);
@@ -75,16 +63,11 @@ this.setState({users});
         const { name, email, image } = friend;
 
         return (
-          <View key={uid}
-          
-         
-          >
+          <View key={uid}>
             <TouchableOpacity
 
 onPress={(e) =>{
-  console.log({props:this.props})
-console.log({e,t:e.target,v:e.target,uid,name,email});
-  this.props.navigation.navigate("Chat", {
+this.props.navigation.navigate("Chat", {
     data: { uid, name, email, image },
     lastMsg: this.props.setLastMsg
   })
@@ -109,11 +92,10 @@ console.log({e,t:e.target,v:e.target,uid,name,email});
           </View>
         );
       });
-    }
+    }else return(<View><Text style={{textAlign:'center'}}>check you internet connection</Text></View>)
   };
 
   render() {
-    console.log('render');
     return (
       <Container>
         <Content>
@@ -132,6 +114,7 @@ const style=StyleSheet.create({
   }
 })
 export default connect(
-  mapStateToProps,
-  { getFriends ,setLastMsg, updateChat }
-)(Users);
+   mapStateToProps,
+   { setLastMsg }
+ )(Users);
+

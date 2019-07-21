@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { registerUser, loginUser } from "../../action/authAction";
 import { StyleSheet, Image, View, TouchableOpacity } from "react-native";
 import logo from "../../img/logo.jpg";
+import isRtl from '../../isRTL';
 import {
   Button,
   Input,
@@ -18,7 +19,7 @@ import {
   Container,
   Spinner
 } from "native-base";
-
+import locale from '../../locale'
 import imagePicker from "react-native-image-picker";
 class SignUp extends Component {
   constructor() {
@@ -40,45 +41,45 @@ class SignUp extends Component {
     }
   }
 
-   handelChoosePhoto = () => {
-     ActionSheet.show(
-       {
-         options: [
-           { text: "camira", icon: "camera", iconColor: "green" },
-           { text: "Galary", icon: "image", iconColor: "green" },
-           { text: "cancl", icon: "exit", iconColor: "green" }
-         ],
-         cancelButtonIndex: 2
-       },
-       ButtonIndex => {
-         if (ButtonIndex == 0) {
-           imagePicker.launchCamera({}, res => {
-             this.setState({ image: res.uri });
-           });
-         } else if (ButtonIndex == 1) {
-           imagePicker.launchImageLibrary({}, res => {
-             if (res.fileSize > 1024 * 1024) {
-               return alert("the maxmum sizee of image is 1MB");
-             }
-             this.setState({ image: res.uri });
-           });
-         }
-       }
-     );
-   };
-   handelSubmit = () => {
-          console.log('from handel submit ',this.state)
-         const { errors, isvalid } = validation(this.state);
-        if (!isvalid) return this.setState({ errors, errors });
-         this.props
-             .registerUser(this.state)
-             .then(data => {
-           this.props.loginUser(data);
-             })
-           .catch(err => {
-             console.log(err);
-           });
-   };
+  handelChoosePhoto = () => {
+    ActionSheet.show(
+      {
+        options: [
+          { text: locale.profile.camera, icon: "camera", iconColor: "green" },
+          { text: locale.profile.galary, icon: "image", iconColor: "green" },
+          { text: locale.profile.cancel, icon: "exit", iconColor: "green" }
+        ],
+        cancelButtonIndex: 2
+      },
+      ButtonIndex => {
+        if (ButtonIndex == 0) {
+          imagePicker.launchCamera({}, res => {
+            this.setState({ image: res.uri });
+          });
+        } else if (ButtonIndex == 1) {
+          imagePicker.launchImageLibrary({}, res => {
+            if (res.fileSize > 1024 * 1024) {
+              return alert("the maxmum sizee of image is 1MB");
+            }
+            this.setState({ image: res.uri });
+          });
+        }
+      }
+    );
+  };
+  handelSubmit = () => {
+    console.log('from handel submit ', this.state)
+    const { errors, isvalid } = validation(this.state);
+    if (!isvalid) return this.setState({ errors, errors });
+    this.props
+      .registerUser(this.state)
+      .then(data => {
+        this.props.loginUser(data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   render() {
     const { errors } = this.state;
@@ -90,46 +91,62 @@ class SignUp extends Component {
               <Image style={styles.image} source={logo} />
               <Form style={styles.form}>
                 <Item stackedLabel>
-                  <Label>
+                  <Label style={styles.Rtl} >
                     <Icon
                       name="md-person"
-                      style={{ fontSize: 18, color: "green" }}
+                      style={{ fontSize: 18, ...styles.ltrIcon }}
                     />
-                    Name
+                    {locale.auth.name} {"  "}
+                    <Icon
+                      name="md-person"
+                      style={{ fontSize: 18, ...styles.rtlIcon }}
+                    />
                   </Label>
                   <Input
+                  
+                  style={styles.textInput}
                     onChangeText={name => {
                       this.setState({ name, errors: {} });
                     }}
                   />
                 </Item>
                 {errors.name && (
-                  <Text style={{ color: "#f99898" }}>{errors.name}</Text>
+                  <Text style={{ color: "#f99898",...styles.Rtl }}>{errors.name}</Text>
                 )}
                 <Item stackedLabel>
-                  <Label>
+                  <Label style={styles.Rtl}>
                     <Icon
                       name="mail"
-                      style={{ fontSize: 18, color: "green" }}
+                      style={{ fontSize: 18, ...styles.ltrIcon }}
                     />{" "}
-                    E-mail
+                    {locale.auth.email} {"  "}
+                    <Icon
+                      name="mail"
+                      style={{ fontSize: 18, ...styles.rtlIcon }}
+                    />
                   </Label>
                   <Input
+                  style={styles.textInput}
                     onChangeText={email => this.setState({ email, errors: {} })}
                   />
                 </Item>
                 {errors.email && (
-                  <Text style={{ color: "#f99898" }}> {errors.email} </Text>
+                  <Text style={{ color: "#f99898",...styles.Rtl }}> {errors.email} </Text>
                 )}
                 <Item stackedLabel>
-                  <Label>
+                  <Label style={styles.Rtl}>
                     <Icon
                       name="md-lock"
-                      style={{ fontSize: 18, color: "green" }}
+                      style={{ fontSize: 18, ...styles.ltrIcon }}
                     />{" "}
-                    Password
+                    {locale.auth.password} {"  "}
+                    <Icon
+                      name="md-lock"
+                      style={{ fontSize: 18, ...styles.rtlIcon }}
+                    />
                   </Label>
                   <Input
+                  style={styles.textInput}
                     secureTextEntry={true}
                     onChangeText={password =>
                       this.setState({ password, errors: {} })
@@ -137,23 +154,28 @@ class SignUp extends Component {
                   />
                 </Item>
                 {errors.password && (
-                  <Text style={{ color: "#f99898" }}> {errors.password} </Text>
+                  <Text style={{ color: "#f99898",...styles.Rtl }}> {errors.password} </Text>
                 )}
                 <Item stackedLabel>
-                  <Label>
+                  <Label style={styles.Rtl}>
                     <Icon
                       name="md-lock"
-                      style={{ fontSize: 18, color: "green" }}
-                    />{" "}
-                    Confirm Password
+                      style={{ fontSize: 18, ...styles.ltrIcon }}
+                    />{"  "}
+                   {locale.auth.password2 } {"  "}
+                    <Icon
+                      name="md-lock"
+                      style={{ fontSize: 18, ...styles.rtlIcon }}
+                    />
                   </Label>
                   <Input
+                  style={styles.textInput}
                     secureTextEntry={true}
                     onChangeText={password2 => this.setState({ password2 })}
                   />
                 </Item>
                 {errors.password2 && (
-                  <Text style={{ color: "#f99898" }}> {errors.password2} </Text>
+                  <Text style={{ color: "#f99898",...styles.Rtl }}> {errors.password2} </Text>
                 )}
                 <Item
                   style={{ borderBottomWidth: 0 }}
@@ -165,32 +187,32 @@ class SignUp extends Component {
                   <Text>
                     <Icon
                       name="md-images"
-                      style={{ fontSize: 18, color: "green" }}
+                      style={{ fontSize: 18, ...styles.ltrIcon }}
                     />{" "}
-                    Image{" "}
+                    {locale.auth.image}{" "}
                   </Text>
                   <TouchableOpacity onPress={() => this.handelChoosePhoto()}>
                     <Icon
-                      style={{ marginLeft: 50, fontSize: 50 }}
+                      style={{ marginLeft: 50, fontSize: 50, color: 'green' }}
                       name="md-cloud-upload"
                     />
                   </TouchableOpacity>
-                  <Text>{this.state.image ? "uploaded sucsessfully" : ""}</Text>
-             
+                  <Text style={styles.Rtl}>{this.state.image ? locale.auth.uploaded : ""}</Text>
+                                                        
                 </Item>
                 {this.props.auth.isLoading ?
-                 (
-                  <Spinner />
-                ) : (
-                  <Button
-                    onPress={this.handelSubmit}
-                    style={styles.button}
-                    full
-                    success
-                  >
-                    <Text>SignUp</Text>
-                  </Button>
-                )}
+                  (
+                    <Spinner />
+                  ) : (
+                    <Button
+                      onPress={this.handelSubmit}
+                      style={styles.button}
+                      full
+                      success
+                    >
+                      <Text style={{...styles.Rtl,fontWeight:'bold'}}>{locale.auth.signupButton}</Text>
+                    </Button>
+                  )}
               </Form>
             </View>
           </Root>
@@ -209,14 +231,14 @@ const mapStateToProps = state => {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-
     alignItems: "center"
   },
   image: {
     height: 100,
     width: 200,
     marginTop: "10%",
-    flex: 15
+    flex: 15,
+
   },
 
   text: {
@@ -228,6 +250,8 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 80,
+    //transform: [{ scaleX: isRtl ? -1 : 1 }],
+
     flexDirection: "column",
     width: "80%",
     marginTop: 40
@@ -236,11 +260,25 @@ const styles = StyleSheet.create({
     marginTop: 30,
     borderRadius: 20,
     alignItems: "center"
+  },
+  Rtl: {
+    //transform: [{ scaleX: isRtl ? -1 : 1 }]
+
+  },
+  textInput:{
+textAlign:isRtl?'right':'left',
+//transform: [{ scaleX: isRtl ? -1 : 1 }]
+  },
+  rtlIcon: {
+    color: isRtl ? 'green' : 'white'
+  },
+  ltrIcon: {
+    color: !isRtl ? 'green' : 'white'
   }
 });
- export default connect(
-   mapStateToProps,
-   { registerUser, loginUser }
- )(SignUp);
+export default connect(
+  mapStateToProps,
+  { registerUser, loginUser }
+)(SignUp);
 
 //export default SignUp;

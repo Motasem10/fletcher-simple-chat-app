@@ -1,15 +1,21 @@
 import React, { Component } from "react";
 
 import { View, Header, Title, Thumbnail } from "native-base";
-import { TouchableWithoutFeedback, StyleSheet } from "react-native";
+import { TouchableWithoutFeedback, StyleSheet,I18nManager } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialIcons";
+
+
 
 class ChatHeader extends Component {
   constructor(props) {
     super(props);
+    this.state={
+      isRtl:I18nManager.isRTL
+    }
   }
   render() {
+  
     const { name, image } = this.props.navigation.getParam("data");
 
     return (
@@ -21,7 +27,7 @@ class ChatHeader extends Component {
               this.props.navigation.navigate("HomeApp");
             }}
           >
-            <Icon size={24} color="white" name="arrow-back" />
+            <Icon size={24} style={{transform:[{rotate:this.state.isRtl?'180deg':'0deg'}]}} color="white" name="arrow-back" />
           </TouchableWithoutFeedback>
 
           <Thumbnail source={{ uri: image }} style={styles.thumbnail} />

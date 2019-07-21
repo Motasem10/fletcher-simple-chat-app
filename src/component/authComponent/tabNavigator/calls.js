@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Thumbnail,
-
   Container,
   Content
 } from "native-base";
@@ -14,6 +13,7 @@ import Image2 from '../../../img/image2.jpg';
 import Image3 from '../../../img/image3.jpg';
 import Image4 from '../../../img/image4.jpg';
 import Icon from "react-native-vector-icons/MaterialIcons";
+import isRtl from '../../../isRTL'
 export default class Calls extends Component {
 state={ 
     //Image, "aly", "january 10, 4:22AM", "recived")
@@ -69,18 +69,14 @@ state={
         <Thumbnail source={Image} />
         <View style={{ flexDirection: "column" }}>
           <Text style={styles.title}>{title}</Text>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", }}>
             <Icon
               name={handelCalltypeIcon.name}
               size={20}
               color={handelCalltypeIcon.color}
             />
             <Text
-              style={{
-                marginLeft: 5,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
+              style={styles.text}
             >
               {text}
             </Text>
@@ -113,7 +109,11 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: "row"
   },
-  title: { fontWeight: "bold", marginLeft: 2 },
+  title: { fontWeight: "bold", marginLeft: 2,
+  alignSelf:'flex-start',
+
+  
+},
 
   firstCallIcon: {
     flex: 8,
@@ -124,10 +124,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#20c659",
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "flex-end",
+    alignSelf: "flex-start",
     margin: 10,
     width: 50,
     height: 50,
     borderRadius: 50
+  },
+  text:{
+    //transform:[{scaleX:isRtl?-1:1}],
+      marginLeft: 5,
+      justifyContent: "center",
+      alignItems: "center"
+    
+  },
+  Rtl:{
+    transform:[{scaleX:isRtl?-1:1}],
   }
 });

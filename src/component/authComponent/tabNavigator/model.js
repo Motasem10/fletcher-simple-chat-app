@@ -11,7 +11,6 @@ export default class Model extends Component {
         }
     }
   render() {
-      console.log('this.props..source',this.props.navigation.getParam('data'));
     return (
         
             <View style={{backgroundColor:'black',flexDirection:'column',flex:1}}>

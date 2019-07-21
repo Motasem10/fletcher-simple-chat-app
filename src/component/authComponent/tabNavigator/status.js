@@ -3,35 +3,43 @@ import {
   Text,
   Container,
   Thumbnail,
-
   Content,
   View
 } from "native-base";
 import myStatus from "../../../img/image1.jpg";
 import Icon from "react-native-vector-icons/MaterialIcons";
-class Status extends Component {
+import locale from '../../../locale';
+import isRtl from '../../../isRTL';
+
+const Status=()=> {
+
+
   renderStatus = (source, header, text) => {
     return (
       <View
         style={{ alignSelf: "flex-start", padding: 5, flexDirection: "row" }}
       >
         <Thumbnail
-          style={{ borderWidth: 2, borderColor: "#169386" }}
+          style={{ borderWidth: 2, borderColor: "#817b7b" }}
           source={source}
         />
-        <View style={{ flexDirection: "column" }}>
-          <Text style={{ fontWeight: "bold", marginLeft: 2 }}>{header}</Text>
-          <Text style={{ marginLeft: 8 }}>{text}</Text>
+        <View style={{ flexDirection: "column",alignItems:'flex-start',marginLeft:10}}>
+          <Text style={{ fontWeight: "bold",}}>{header}</Text>
+          <Text style={{ }}>{text}</Text>
         </View>
       </View>
     );
   };
-  render() {
+
     return (
       <Container>
+        
           <View style={{flexDirection:'column',position:'absolute',right:5,bottom:0}}>
             <View 
-            style={{    backgroundColor: "#efecec",
+            style={{ 
+           
+              backgroundColor: "#efecec",
+              
             justifyContent: "center",
             alignItems: "center",
             alignSelf: "flex-end",
@@ -61,34 +69,37 @@ class Status extends Component {
            color='black'
           />
           </View>
-          {this.renderStatus(myStatus, "My status", "just Now")}
+          {this.renderStatus(myStatus, locale.status.myStatus,locale.status.now)}
           <View
             style={{
               height: 30,
               backgroundColor: "rgb(247, 247, 247)",
-              justifyContent: "center"
+              justifyContent: "center",
+             
             }}
           >
-            <Text style={{ color: "#169386" }}>Recent updates</Text>
+            <Text style={{ color: "#817b7b" }}>{locale.status.recent}</Text>
           </View>
-          {this.renderStatus(myStatus, "Kariem", "from 10 minuts")}
-          {this.renderStatus(myStatus, "Ahmed", "from 1 Hour")}
-          {this.renderStatus(myStatus, "khaled", "Today 2:15pn")}
+
+          {this.renderStatus(myStatus, "Kariem",isRtl?'قبل 10 دقيقة': "from 10 minuts")}
+          {this.renderStatus(myStatus, "Ahmed",isRtl?"منذ ساعة": "from 1 Hour")}
+          {this.renderStatus(myStatus, "khaled", isRtl?"اليوم 10:20 ":"Today 2:15pn")}
 
           <View
             style={{
+
               height: 30,
               backgroundColor: "rgb(247, 247, 247)",
               justifyContent: "center"
             }}
           >
-            <Text style={{ color: "#169386" }}> Viewed updates</Text>
+            <Text style={{ color: "#817b7b",marginLeft:10}}>{locale.status.viewed}</Text>
           </View>
-          {this.renderStatus(myStatus, "khaled", "Yesterday, 2:15pm")}
+          {this.renderStatus(myStatus, "khaled", isRtl?"الامس 2:15":"Yesterday, 2:15pm")}
         </Content>
       </Container>
     );
-  }
+  
 }
 
 export default Status;

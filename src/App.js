@@ -107,7 +107,6 @@ if(!firebase.apps.length){
     
   firebase.auth().onAuthStateChanged(user => {
     if (user) { 
-         console.log(user);
              this.setState({ isAuth: true });
                   
       } else {
@@ -144,7 +143,6 @@ if(!firebase.apps.length){
   }
 
   render() {
-    console.log({store});
     return <Provider store={store}>
     <Root>
  {this.renderNavigator()}

@@ -2,9 +2,9 @@ import Login from "./Login";
 import SignUp from "./signup";
 import { StyleSheet, View, ScrollView, Dimensions } from "react-native";
 import React, { Component } from "react";
-
-//import console = require("console");
 const deviceWidth = Dimensions.get("window").width;
+import isRtl from '../../isRTL';
+
  class rootStackNavigator extends Component {
   constructor(props) {
     super(props);
@@ -14,15 +14,18 @@ const deviceWidth = Dimensions.get("window").width;
   }
   goToRegisterPage = () => {
     //console.log({this:this});
-    this.scroller.scrollTo({ x: deviceWidth, y: 0 });
+    this.scroller.scrollTo({ x: isRtl?-deviceWidth:deviceWidth, y: 0 });
   };
 
-
+onLayout=()=>{
+  console.log('sssssssss');
+}
 
   render() {
       return (
       <ScrollView
-      contentContainerStyle={{flexGrow:1,justifyContent:'center'}}
+      onLayout={this.onLayout}
+      contentContainerStyle={{flexGrow:1,justifyContent:'center',}}
         ref={scroll => (this.scroller = scroll)}
         scrollTo={this.state.scrollTo}
         horizontal={true}

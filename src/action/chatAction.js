@@ -4,6 +4,7 @@ import { SET_FRIENDS, SET_OLD_CHAT_FOR_USER, UPDATE_CHAT,INCREMENT_DOC } from ".
 import store from "../store";
 const  MSG_LIMIT =20;
 
+
 //import firebase from "react-native-firebase";
 //___________________________________________________
 
@@ -78,6 +79,7 @@ const setLastMsg = (uid, msg) => dispatch => {
         //add this friend to top of list
 
         let friendList = addToHeadOfObject(fr, uid);
+        console.log({friendList});
 
         friendList[uid].lastMsg = msg; //set msg as last msg
         AsyncStorage.setItem("Friends", JSON.stringify(friendList));
@@ -97,19 +99,17 @@ const setLastMsg = (uid, msg) => dispatch => {
 
 // it's used to add the last friend connected(send or recived)  to ahead of list
 const addToHeadOfObject = (obj, key) => {
-  if (!obj[key]) return "error in key";
-  let newObj = {};
-  const element = obj[key];
-  newObj[key] = element;
-  delete obj[key];
-  return Object.assign(newObj, obj);
-};
+
+    if (!obj[key]) return "error in key";
+   // let newObj = {};
+  
+  return {[key]:obj[key],...obj};
+  };
 //================================================================
 const saveMsgInLocalStore = (uid, allMsg, msg, numberOfDoc,numberOfLoodingDoc) => {
-
   if (allMsg.length > MSG_LIMIT &&  (allMsg.length/ numberOfLoodingDoc)>MSG_LIMIT   ) {
-    console.log('saveMsgInLocalStore', { uid, allMsg, msg, numberOfDoc,uidNum: allMsg.slice(1,MSG_LIMIT+1)})
-console.log(`create new Doc`)
+  //  console.log('saveMsgInLocalStore', { uid, allMsg, msg, numberOfDoc,uidNum: allMsg.slice(1,MSG_LIMIT+1)})
+//console.log(`create new Doc`)
     AsyncStorage.multiSet([
       [uid + (Number(numberOfDoc)+1),  JSON.stringify(allMsg.slice(1,MSG_LIMIT+1) ) ],
       [uid, JSON.stringify({ lastChat: [msg], numberOfDoc:Number(numberOfDoc)+1 })]
@@ -122,7 +122,7 @@ console.log(`create new Doc`)
       numberOfDoc:Number(numberOfDoc)+1,
       numberOfLoodingDoc:numberOfLoodingDoc+1,
     }
-    console.log({payload});
+  //  console.log({payload});
     //dispatch aldMsg
    store.dispatch({
       type:INCREMENT_DOC,
@@ -130,7 +130,7 @@ console.log(`create new Doc`)
     })
 
   } else {
-    console.warn('else remove it =======>>>======>>>',{ lastChat: allMsg.slice(0,(allMsg.length- (numberOfLoodingDoc-1)*MSG_LIMIT) ), numberOfDoc,allMsg });
+  //  console.warn('else remove it =======>>>======>>>',{ lastChat: allMsg.slice(0,(allMsg.length- (numberOfLoodingDoc-1)*MSG_LIMIT) ), numberOfDoc,allMsg });
   AsyncStorage.setItem(uid, JSON.stringify({ lastChat:allMsg.slice(0,(allMsg.length- (numberOfLoodingDoc-1)*MSG_LIMIT) ), numberOfDoc }));
   }
 
@@ -205,28 +205,12 @@ const sendMsg = msg => dispatch => {
 
 //==================================================================
 const prepareSenderReciverChat = reciverUid => dispatch => {
-  AsyncStorage.getAllKeys().then(allKey => {
-    console.log({ allKey });
-
-    allKey.forEach(k => {
-      if (k.length > 13) {
-  // AsyncStorage.removeItem(k)
-     AsyncStorage.getItem(k)
-       .then(e => {
-          console.log(`---${k}---`, JSON.parse(e));
-        })
-
-      }
-    })
-
-  })
   const senderUid = store.getState().auth.user.uid;
  
   const {numberOfLoodingDoc}=store.getState().chat;
   //get old msg       
   AsyncStorage.getItem(reciverUid).then(user => {
     user = JSON.parse(user);
-    console.log({ user })
     if (!user) {
     
       let newUser = { numberOfDoc: 0, lastChat: [] }
@@ -240,9 +224,9 @@ const prepareSenderReciverChat = reciverUid => dispatch => {
     if (false && user.lastChat.length <=3 && user.numberOfDoc > 0 && numberOfLoodingDoc==1) {// becouse chat will be very short add  new doc
     
       AsyncStorage.getItem(reciverUid+user.numberOfDoc).then(extraMsg => {
-        console.log('not seeeeeeeeeeeeeeeeeeeeeeeeeeen',{lastChat:user.lastChat,extraMsg:JSON.parse(extraMsg)})
+      //  console.log('not seeeeeeeeeeeeeeeeeeeeeeeeeeen',{lastChat:user.lastChat,extraMsg:JSON.parse(extraMsg)})
         lastChat=[ ...user.lastChat,...JSON.parse(extraMsg),] ;
-        console.log('user.lastChat',{lastChat} )
+      //  console.log('user.lastChat',{lastChat} )
 
          dispatch({
         type: SET_OLD_CHAT_FOR_USER,

@@ -21,21 +21,21 @@ import firebase from 'react-native-firebase';
 //a=firebase.firestore().settings({cacheSizeBytes:firebase.firestore.CACHE_SIZE_UNLIMITED})
 
 
-firebase.firestore().enablePersistence().catch(err => {
-  console.log({ errFirestore: err });
-  if (err.code === 'faild-precondition') {
+// firebase.firestore().enablePersistence().catch(err => {
+//   console.log({ errFirestore: err });
+//   if (err.code === 'faild-precondition') {
 
-  }
+//   }
 
-})
-console.log('------------------------------------------------------');
+// })
 
-// firebase.firestore().collection('users').doc('aly').set({a:true}).then((a)=>{
 
-//    console.log('locaaaaaaaaaaaaaaaaaaaaaaaaal fb',{a:a})
-//  }).catch(err=>{
-//    console.log('firestooooooooore',{err});
-//  })
+// // firebase.firestore().collection('users').doc('aly').set({a:true}).then((a)=>{
+
+// //    console.log('locaaaaaaaaaaaaaaaaaaaaaaaaal fb',{a:a})
+// //  }).catch(err=>{
+// //    console.log('firestooooooooore',{err});
+// //  })
 
 
 export default firebase;

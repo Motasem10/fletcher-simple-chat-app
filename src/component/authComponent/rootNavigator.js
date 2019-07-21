@@ -8,7 +8,7 @@ import {
     Right,
  
   } from "native-base";
-
+  import locale from '../../locale';
   import {createStackNavigator,
     createMaterialTopTabNavigator,createAppContainer} from 'react-navigation';
   import Icon from "react-native-vector-icons/MaterialIcons";
@@ -22,28 +22,27 @@ import Model from './tabNavigator/model';
 import Users from './tabNavigator/users';
 import UsersHeader from './tabNavigator/UsersHeader';
 
-const TabNav = createMaterialTopTabNavigator({
-  
-    Chats: {
+const TabNav = createMaterialTopTabNavigator(
+  {
+    [locale['profile']['chats']]: {
       screen: Chats,
-      navigationOptions: {}
+      navigationOptions: {},
     },
-    Calls: {
+    [locale['profile']['status']]: {
+      screen: Status,
+      navigationOptions: {
+        headerLeft: null
+      }
+    }, [locale['profile']['calls']]: {
       screen: Calls,
       navigationOptions: {
         headerLeft: null
       }
     },
 
-    Status: {
-      screen: Status,
-      navigationOptions: {
-        headerLeft: null
-      }
-    },
-
-   
+  
   },
+  
   {
     tabBarOptions: {
       activeTintColor: "white",
@@ -71,7 +70,7 @@ HomeApp: {
       header: (
         <Header hasTabs style={{ backgroundColor: "#075e54" }}>
           <Left>
-            <Title>Fletchers</Title>
+            <Title>{locale.auth.appName}</Title>
           </Left>
           <Right style={{ position: "absolute", right: 20 }}>
             <Icon style={{ color: "white", marginLeft: 10 }} size={20} name="search" />

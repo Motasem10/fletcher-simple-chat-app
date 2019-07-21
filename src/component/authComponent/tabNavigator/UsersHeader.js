@@ -10,14 +10,12 @@ class UsersHeader extends Component {
     super(props);
   }
   render() {
-   // const { name, image } = this.props.navigation.getParam("data");
-console.log({UsersHeader:this.props,a:this.props.navigation.actions.pop()})
     return (
       <Header style={styles.header}>
         <View style={styles.headerLeft}>
           <TouchableWithoutFeedback
             onPress={() => {
-              //  this.props.navigation.dispatch(NavigationActions.back());
+           
               this.props.navigation.navigate("HomeApp");
             }}
           >

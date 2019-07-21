@@ -10,21 +10,18 @@ import {
   CardItem,
   Textarea,
   ActionSheet,
-  Spinner,
 } from "native-base";
-//import firebase from '../../../firebase'
 import imagePicker from "react-native-image-picker";
-
 import Icon from "react-native-vector-icons/MaterialIcons";
 import {
   ImageBackground,
   StyleSheet,
+  I18nManager,
   FlatList,
 AsyncStorage,
   Image,
   TouchableWithoutFeedback
 } from "react-native";
-
 import { connect } from "react-redux";
 import {
   sendMsg,
@@ -34,6 +31,7 @@ import {
   loadMore,
 } from "../../../action/chatAction";
 import store from "../../../store";
+import locale from '../../../locale';
 
 
 class Chat extends Component {
@@ -46,7 +44,7 @@ class Chat extends Component {
       lastChat: "",
       start:0,
       end:0,
-      loading:true
+      loading:''
 
     };
   }
@@ -58,23 +56,27 @@ class Chat extends Component {
     ActionSheet.show(
       {
         options: [
-          { text: "camira", icon: "camera", iconColor: "green" },
-          { text: "Galary", icon: "image", iconColor: "green" },
-          { text: "cancl", icon: "exit", iconColor: "green" }
+          { text: locale.profile.camera, icon: "camera", iconColor: "green" },
+          { text: locale.profile.galary, icon: "image", iconColor: "green" },
+          { text: locale.profile.cancel, icon: "exit", iconColor: "green" }
         ],
         cancelButtonIndex: 2
       },
+      
       ButtonIndex => {
+console.log({ButtonIndex});
         if (ButtonIndex == 0) {
-          imagePicker.launchCamera({}, res => {
+          imagePicker.launchCamera({allowsEditing:false}, res => {
             this.setState({ image: res.uri });
           });
         } else if (ButtonIndex == 1) {
+
           imagePicker.launchImageLibrary({}, res => {
+            console.log({res});
             if (res.fileSize > 1024 * 1024) {
               return alert("the maxmum size of image is 1MB");
             }
-
+console.log('handelChoosePhoto',res);
             res.uri && this.props.navigation.navigate("Model", {
               data: {
                 choosePhoto: this.choosePhoto.bind(this),
@@ -111,6 +113,7 @@ class Chat extends Component {
     //get old MSg 
     await this.props.prepareSenderReciverChat(reciverUid);
 
+
 };
 
   handelSendMsg = () => {
@@ -118,13 +121,12 @@ class Chat extends Component {
     const msg = this.state.msg;
     if (msg.length < 1) return
     this.setState({ msg: '' });
-    const reciverUid = this.props.navigation.getParam("data").uid;
-    const senderUid = this.props.senderUid;
-    console.log({ senderUid, reciverUid, p: this.props })
+   // const reciverUid = this.props.navigation.getParam("data").uid;
+   // const senderUid = this.props.senderUid;
+  
     this.props.sendMsg({ msg }).then(msg => {
       this.props.navigation.getParam('lastMsg')(this.props.reciverUid, msg)
     });
-    console.log({ senderUid, reciverUid,t:this });
     this.ScrollView.scrollToOffset({animated:true,offset:0});
     //scrollToIndex({animated:true,index:0,viewOffset:0,viewPosition:0})
     // firebase.database()
@@ -191,19 +193,17 @@ class Chat extends Component {
 
     }
   }
-  componentWillReceiveProps(props,props1){
-    console.log({props,props1})
-  }
+
 
 loadMore=()=>{
-  console.log('================\n LOOOOOOOOOOOD \n ++++++++++++++++++')
+  console.log('looooooooooooooooooood');
   const {numberOfDoc,numberOfLoodingDoc,reciverUid}=this.props;
 
   if(numberOfDoc>=numberOfLoodingDoc){
 this.setState({loading:true});
 
     AsyncStorage.getItem(reciverUid+(numberOfDoc-(numberOfLoodingDoc-1))).then(chat=>{
-  if(!chat) retur
+  if(!chat) return;
  
   let payload={numberOfLoodingDoc:numberOfLoodingDoc+1,lastChat:[...this.props.lastChat,...JSON.parse(chat)] }
    
@@ -218,15 +218,12 @@ this.setState({loading:false})
 
 } 
 componentWillUnmount(){
-  console.log('=========componentWillUnmount=============');
-  getDate(new Date().getTime())
   store.dispatch({type:'SET_OLD_CHAT_FOR_USER',payload:{numberOfLoodingDoc:1,numberOfDoc:0,lastChat:[]}})
 }
 
   render() {
 
 let data=this.props.lastChat?this.props.lastChat:[];
-console.log({lastChat:this.props.lastChat,data});
     return (
       <Container>
         <ImageBackground source={bg} style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -242,38 +239,24 @@ console.log({lastChat:this.props.lastChat,data});
  // onResponderEnd={()=>console.log('======== render END')}
            // onScrollToIndexFailed={(index)=>{console.log(index)}
            onEndReachedThreshold={0.01}
-           onEndReached={()=>{
-        //     console.log({distanceFromEnd})
-        //     if(this.onEndReachedDuringMomentum){
-             this.loadMore()
-           // this.onEndReachedDuringMomentum=true; 
-          //  }
-            }}
-       //   onMomentumScrollBegin={({})=>{
-         //   console.log('onMomentumScrollBegin');
-           // this.onEndReachedDuringMomentum=false;
-         // }}
-            initialNumToRender={20
-            }
+           onEndReached={()=>this.loadMore()}
+           initialNumToRender={20}
             ref={ref => this.ScrollView = ref}
             inverted={false}
             style={{ transform: [{ scaleY: -1 }] }}
-            renderItem={({ item, index }) =>{
-
-            return(
+            renderItem={({ item, index }) =>(
               <View style={{ transform: [{ scaleY: -1 }]}}>
                 {this.RendrChat(item)}
               </View>
-            )}}
-            ListHeaderComponent={() =>
-              (<View on style={{ marginBottom: 70 }}></View>)
-            }
-            extraData={(item, index) => console.log({ item, index })}
+            )}
+            ListHeaderComponent={() =>(<View on style={{ marginBottom: 70 }}></View>)}
+            
+          
             ListFooterComponent={()=>{
 if(this.state.loading==='') (<Text></Text>)
-             else if(this.state.loading){
+             else if(this.state.loading===''){
 
-               return (<Spinner></Spinner>)
+               return (<Text></Text>)
               }
             return (<View style={{
               
@@ -284,27 +267,14 @@ if(this.state.loading==='') (<Text></Text>)
             }}><Badge style={{backgroundColor:'#2c8807',padding:20,alignSelf:'center'}}><Text>start</Text></Badge></View>)
             }
             
-            }
-          //  ListEmptyComponent={()=>(<Text>empty</Text>)}
-            
+            } 
           >
-
           </FlatList>
           </View>
           <View style={{ flex: 10 }}>
-
-
-
-
           </View>
-
-
-
           <View style={{ flexDirection: "row", marginBottom: 10, zIndex: 0, position: 'absolute', bottom: 0 }}>
-
-
             <View style={styles.textAreaView}>
-
               <Textarea
                 multiline={true}
                 maxLength={100}
@@ -318,7 +288,6 @@ if(this.state.loading==='') (<Text></Text>)
                 </Badge>
               </TouchableWithoutFeedback>
             </View>
-
             <View style={{ flex: 15 }}>
               <TouchableWithoutFeedback onPress={(e) => this.handelSendMsg(e)}>
                 <Badge style={styles.senIconView}>
@@ -332,14 +301,12 @@ if(this.state.loading==='') (<Text></Text>)
               </TouchableWithoutFeedback>
             </View>
           </View>
-
         </ImageBackground>
-
       </Container>
     );
   }
 }
-
+const isRtl=I18nManager.isRTL;
 const styles = StyleSheet.create({
   sendMsg: {
     marginRight: 20,
@@ -366,7 +333,7 @@ const styles = StyleSheet.create({
 
   sendIcon: {
     // color: "white",
-    // transform: [{ rotate: "180deg" }]
+     transform: [{ rotate:isRtl? "180deg":'0deg' }]
   },
   Image: {
     marginRight: 20,
@@ -419,7 +386,6 @@ const styles = StyleSheet.create({
 });
 
 mapStateToProps = state => {
-  console.log({ state })
   return {
     auth: state.auth,
     msg: "",

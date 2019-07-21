@@ -9,7 +9,6 @@ import AppContainer from './rootNavigator'
 export default class navbar extends Component {
 
     render() {
-      console.log('|||||||||||||||||')
     return (
       <Container>
       <AppContainer></AppContainer>

@@ -17,7 +17,6 @@ const initialState = {
 };
 
 export default function(state = initialState, action) {
-  console.log("chat reducer", { initialState, action });
   switch (action.type) {
     case SET_FRIENDS: //set lest of friends to render it in home page
       return { ...state, friends: action.payload };
