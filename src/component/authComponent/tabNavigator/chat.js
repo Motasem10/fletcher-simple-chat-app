@@ -18,7 +18,7 @@ import {
   StyleSheet,
   I18nManager,
   FlatList,
-AsyncStorage,
+  AsyncStorage,
   Image,
   TouchableWithoutFeedback
 } from "react-native";
@@ -38,13 +38,13 @@ class Chat extends Component {
   constructor(props) {
 
     super(props);
-  ///  this.onEndReachedDuringMomentum=true;
+    ///  this.onEndReachedDuringMomentum=true;
     this.state = {
       msg: "",
       lastChat: "",
-      start:0,
-      end:0,
-      loading:''
+      start: 0,
+      end: 0,
+      loading: ''
 
     };
   }
@@ -62,21 +62,21 @@ class Chat extends Component {
         ],
         cancelButtonIndex: 2
       },
-      
+
       ButtonIndex => {
-console.log({ButtonIndex});
+        //console.log({ButtonIndex});
         if (ButtonIndex == 0) {
-          imagePicker.launchCamera({allowsEditing:false}, res => {
+          imagePicker.launchCamera({ allowsEditing: false }, res => {
             this.setState({ image: res.uri });
           });
         } else if (ButtonIndex == 1) {
 
           imagePicker.launchImageLibrary({}, res => {
-            console.log({res});
+            console.log({ res });
             if (res.fileSize > 1024 * 1024) {
               return alert("the maxmum size of image is 1MB");
             }
-console.log('handelChoosePhoto',res);
+            //console.log('handelChoosePhoto',res);
             res.uri && this.props.navigation.navigate("Model", {
               data: {
                 choosePhoto: this.choosePhoto.bind(this),
@@ -95,8 +95,9 @@ console.log('handelChoosePhoto',res);
       //SEND MSG TAKE Object
       this.props.sendMsg(msg).then(msg => {
 
-        //set last msg t uunderstandt it look at home.js 
-        this.props.navigation.getParam('lastMsg')(this.props.reciverUid, msg)
+        //set last msg t uunderstandt it look at chats.js line 133 
+        this.props.navigation.getParam('lastMsg')(this.props.reciverUid, msg);
+        //delete msg from textBox
         this.setState({ msg: '' })
 
       });
@@ -106,28 +107,28 @@ console.log('handelChoosePhoto',res);
   };
 
 
-  componentDidMount =async  () => {
-  
+  componentDidMount = async () => {
+
     //get uid from home.js 
     const reciverUid = this.props.navigation.getParam("data").uid;
     //get old MSg 
     await this.props.prepareSenderReciverChat(reciverUid);
 
 
-};
+  };
 
   handelSendMsg = () => {
 
     const msg = this.state.msg;
     if (msg.length < 1) return
     this.setState({ msg: '' });
-   // const reciverUid = this.props.navigation.getParam("data").uid;
-   // const senderUid = this.props.senderUid;
-  
+    // const reciverUid = this.props.navigation.getParam("data").uid;
+    // const senderUid = this.props.senderUid;
+
     this.props.sendMsg({ msg }).then(msg => {
       this.props.navigation.getParam('lastMsg')(this.props.reciverUid, msg)
     });
-    this.ScrollView.scrollToOffset({animated:true,offset:0});
+    this.ScrollView.scrollToOffset({ animated: true, offset: 0 });
     //scrollToIndex({animated:true,index:0,viewOffset:0,viewPosition:0})
     // firebase.database()
     //.ref(`msg/${reciverUid}`)
@@ -161,7 +162,7 @@ console.log('handelChoosePhoto',res);
             <Text style={{ alignSelf: "flex-start" }}>{item.msg}</Text>
           ) : null}
           <Text style={{ fontSize: 10, alignSelf: "flex-end" }}>
-            {getDate(item.time ).time}
+            {getDate(item.time).time}
           </Text>
         </View>
       );
@@ -186,7 +187,7 @@ console.log('handelChoosePhoto',res);
             <Text style={{ alignSelf: "flex-start" }}>{item.msg}</Text>
           ) : null}
           <Text style={{ fontSize: 10, alignSelf: "flex-end" }}>
-            {getDate(item.time).time }
+            {getDate(item.time).time}
           </Text>
         </View>
       );
@@ -195,35 +196,35 @@ console.log('handelChoosePhoto',res);
   }
 
 
-loadMore=()=>{
-  console.log('looooooooooooooooooood');
-  const {numberOfDoc,numberOfLoodingDoc,reciverUid}=this.props;
+  loadMore = () => {
+    console.log('looooooooooooooooooood');
+    const { numberOfDoc, numberOfLoodingDoc, reciverUid } = this.props;
 
-  if(numberOfDoc>=numberOfLoodingDoc){
-this.setState({loading:true});
+    if (numberOfDoc >= numberOfLoodingDoc) {
+      this.setState({ loading: true });
 
-    AsyncStorage.getItem(reciverUid+(numberOfDoc-(numberOfLoodingDoc-1))).then(chat=>{
-  if(!chat) return;
- 
-  let payload={numberOfLoodingDoc:numberOfLoodingDoc+1,lastChat:[...this.props.lastChat,...JSON.parse(chat)] }
-   
-    return   this.props.loadMore(payload);
- 
-  
-    
-  })
-}else{ //its mean this is start of chat 
-this.setState({loading:false})
-}
+      AsyncStorage.getItem(reciverUid + (numberOfDoc - (numberOfLoodingDoc - 1))).then(chat => {
+        if (!chat) return;
 
-} 
-componentWillUnmount(){
-  store.dispatch({type:'SET_OLD_CHAT_FOR_USER',payload:{numberOfLoodingDoc:1,numberOfDoc:0,lastChat:[]}})
-}
+        let payload = { numberOfLoodingDoc: numberOfLoodingDoc + 1, lastChat: [...this.props.lastChat, ...JSON.parse(chat)] }
+
+        return this.props.loadMore(payload);
+
+
+
+      })
+    } else { //its mean this is start of chat 
+      this.setState({ loading: false })
+    }
+
+  }
+  componentWillUnmount() {
+    store.dispatch({ type: 'SET_OLD_CHAT_FOR_USER', payload: { numberOfLoodingDoc: 1, numberOfDoc: 0, lastChat: [] } })
+  }
 
   render() {
 
-let data=this.props.lastChat?this.props.lastChat:[];
+    let data = this.props.lastChat ? this.props.lastChat : [];
     return (
       <Container>
         <ImageBackground source={bg} style={{ flex: 1, width: "100%", height: "100%" }}>
@@ -235,41 +236,41 @@ let data=this.props.lastChat?this.props.lastChat:[];
             }}
           > */}
           <View >
-          <FlatList data={data}
- // onResponderEnd={()=>console.log('======== render END')}
-           // onScrollToIndexFailed={(index)=>{console.log(index)}
-           onEndReachedThreshold={0.01}
-           onEndReached={()=>this.loadMore()}
-           initialNumToRender={20}
-            ref={ref => this.ScrollView = ref}
-            inverted={false}
-            style={{ transform: [{ scaleY: -1 }] }}
-            renderItem={({ item, index }) =>(
-              <View style={{ transform: [{ scaleY: -1 }]}}>
-                {this.RendrChat(item)}
-              </View>
-            )}
-            ListHeaderComponent={() =>(<View on style={{ marginBottom: 70 }}></View>)}
-            
-          
-            ListFooterComponent={()=>{
-if(this.state.loading==='') (<Text></Text>)
-             else if(this.state.loading===''){
+            <FlatList data={data}
+              // onResponderEnd={()=>console.log('======== render END')}
+              // onScrollToIndexFailed={(index)=>{console.log(index)}
+              onEndReachedThreshold={0.01}
+              onEndReached={() => this.loadMore()}
+              initialNumToRender={20}
+              ref={ref => this.ScrollView = ref}
+              inverted={false}
+              style={{ transform: [{ scaleY: -1 }] }}
+              renderItem={({ item, index }) => (
+                <View style={{ transform: [{ scaleY: -1 }] }}>
+                  {this.RendrChat(item)}
+                </View>
+              )}
+              ListHeaderComponent={() => (<View on style={{ marginBottom: 70 }}></View>)}
 
-               return (<Text></Text>)
+
+              ListFooterComponent={() => {
+                if (this.state.loading === '') (<Text></Text>)
+                else if (this.state.loading === '') {
+
+                  return (<Text></Text>)
+                }
+                return (<View style={{
+
+                  transform: [{ scaleY: -1 }],
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                  margin: 10,
+                }}><Badge style={{ backgroundColor: '#2c8807', padding: 20, alignSelf: 'center' }}><Text>start</Text></Badge></View>)
               }
-            return (<View style={{
-              
-              transform:[{scaleY:-1}],
-            justifyContent:'flex-start',
-            alignItems:'flex-start',
-            margin:10,
-            }}><Badge style={{backgroundColor:'#2c8807',padding:20,alignSelf:'center'}}><Text>start</Text></Badge></View>)
-            }
-            
-            } 
-          >
-          </FlatList>
+
+              }
+            >
+            </FlatList>
           </View>
           <View style={{ flex: 10 }}>
           </View>
@@ -306,7 +307,7 @@ if(this.state.loading==='') (<Text></Text>)
     );
   }
 }
-const isRtl=I18nManager.isRTL;
+const isRtl = I18nManager.isRTL;
 const styles = StyleSheet.create({
   sendMsg: {
     marginRight: 20,
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
 
   sendIcon: {
     // color: "white",
-     transform: [{ rotate:isRtl? "180deg":'0deg' }]
+    transform: [{ rotate: isRtl ? "180deg" : '0deg' }]
   },
   Image: {
     marginRight: 20,
@@ -389,21 +390,20 @@ mapStateToProps = state => {
   return {
     auth: state.auth,
     msg: "",
-    lastChat: state.chat.lastChat ,//&& state.chat.lastChat.reverse(),
+    lastChat: state.chat.lastChat,//&& state.chat.lastChat.reverse(),
     url: state.chat.url,
     uri: state.chat.uri,
     path: state.chat.path,
-   // chatData:state.chat,
-    numberOfDoc:state.chat.numberOfDoc,
+    numberOfDoc: state.chat.numberOfDoc,
     numberOfLoodingDoc: state.chat.numberOfLoodingDoc,
     senderUid: state.chat.senderUid,
     reciverUid: state.chat.reciverUid,
     friends: state.chat.friends,
   };
-};0
+}; 0
 export default connect(
   mapStateToProps,
-  { prepareSenderReciverChat, sendMsg,loadMore }
+  { prepareSenderReciverChat, sendMsg, loadMore }
 )(Chat);
 
 //export default Chat;

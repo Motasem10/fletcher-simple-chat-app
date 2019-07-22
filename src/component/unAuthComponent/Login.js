@@ -106,7 +106,7 @@ class Login extends Component {
                 false ||
                 <TouchableOpacity
                   onPress={() => {
-                    console.log("hi");
+                   // console.log("hi");
                     this.props.goToRegisterPage();
                   }}
                 >

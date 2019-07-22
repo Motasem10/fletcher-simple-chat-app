@@ -13,25 +13,27 @@ import { connect } from "react-redux";
 import firebase from "../../../firebase";
 
 import { getFriends, setLastMsg, updateChat, saveMsgInLocalStore, getDate } from "../../../action/chatAction";
-import unknown from '../../../img/unknown.jpg' 
+import unknown from '../../../img/unknown.jpg'
+
 
 class Chats extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      friends: null
+      friends: null,
+      firebaseEvent:[]
     };
   }
   notificationHandel = (name, msg, image) => {
 
     const notification = new firebase.notifications.Notification()
       .setTitle('FLETCHERS')
-      .setBody('new masseage ').setData({ largeIcon:'logo' })
+      .setBody('new masseage ').setData({ largeIcon: 'logo' })
       .setNotificationId('notification-action')
       .setSound('default')
       .android.setChannelId('notification-action')
       .android.setPriority(firebase.notifications.Android.Priority.Max);
-
+       console.log({image});
     image && notification.android.setBigPicture(image)
     // Build an action
     const action = new firebase.notifications.Android.Action('snooze', 'logo', `${name}: ${msg}`);
@@ -43,34 +45,41 @@ class Chats extends Component {
     // Display the notification
     firebase.notifications().displayNotification(notification);
   }
-  listenToNewMsg = async friends => {
+  listenToNewMsg = async (friends,isInBackground=false) => {
 
     if (!friends) return;
     const reciverUid = this.props.uid;
     const friendsUid = Object.keys(this.props.friends); // get array of friends  uid
     //listen to all friends
-
+    console.log({reciverUid,friends});
+    let  firebaseEvent=[]; //push event ref to array to remove it when i wont
     friendsUid.forEach(uid => {
       const ref = firebase.database().ref(`msg/${reciverUid}/${uid}`);
+      firebaseEvent.push(ref);
       ref.on("value", snapShot => {
         if (snapShot.val()) {
           const msges = Object.values(snapShot.val());
           const uid = snapShot.ref.path.split('/')[2];
-               const  name =friends[uid].name;
-                const image =friends[uid].image
+          const name = friends[uid].name;
+          const image = friends[uid].image
           ref.remove();
           this.recivedMsgHandel(msges, uid).then(data => {
-             this.notificationHandel(name,data.msg.msg,image);
+
+       
             this.props.setLastMsg(data.uid, data.msg);
 
+            if(isInBackground) this.notificationHandel(name, data.msg.msg, image);
           });
         }
 
       });
     });
+this.firebaseEvent=firebaseEvent;
+    
   };
   recivedMsgHandel = (msgArr, uid) => {
     return new Promise(resolve => {
+    
       AsyncStorage.getItem(uid).then(old => {
         const OldChat = JSON.parse(old);
         //if it is the first chat
@@ -91,37 +100,54 @@ class Chats extends Component {
   goToUSersList = () => this.props.navigation.navigate("Users");
   componentDidMount = async () => {
 
-    AsyncStorage.getItem('Friends').then(e=>{
-      console.log({e:JSON.parse(e)});
-    })
-console.log('pefore get users');
-  const friends = await this.props.getFriends();
-  // await this.listenToNewMsg(friends);
-   console.log('after it');
+    const friends = await this.props.getFriends();
+    await this.listenToNewMsg(friends,false);
+    // console.log('after it');
   };
 
+  componentWillUnmount(){
+console.log('run notification -------------------------------------')
+this.listenToNewMsg(this.props.friends,true);
+  
+  }
+
+  removeEvent=(arr=[])=>{
+console.log('remove event ',arr)
+arr.forEach(e=>{
+  e.off();
+})
+  }
+  componentWillMount(){
+
+    console.log('componentWillUnmount first ',this.firebaseEvent);
+this.removeEvent(this.firebaseEvent);
+this.firebaseEvent=null;
+  //  this.displayNotification=null;
+  //  console.log('displayNotification disabled',this.displayNotification);
+  //  // console.log('componentWillMount',this);
+  }
 
 
   renderFriends = () => {
-    
-  //  let index = -1; //index for uid
+
+    //  let index = -1; //index for uid
     const { friends } = this.props;
     if (friends) {
       //if there are friends in state
-      let sortedFriends=[];
-      for(e in  friends){
-        sortedFriends.push([e,friends[e]]);
-        } 
-      sortedFriends.sort((a,b)=>{
-        if(a[1].lastMsg && b[1].lastMsg)
-        return b[1].lastMsg.time-a[1].lastMsg.time
-        
+      let sortedFriends = [];
+      for (e in friends) {
+        sortedFriends.push([e, friends[e]]);
+      }
+      sortedFriends.sort((a, b) => {
+        if (a[1].lastMsg && b[1].lastMsg)
+          return b[1].lastMsg.time - a[1].lastMsg.time
+
       })
-      
-     // const uidArray = Object.keys(friends);
-//onsole.log({sortedFriends});
+
+      // const uidArray = Object.keys(friends);
+      //onsole.log({sortedFriends});
       return sortedFriends.map(friend => {
-    //    index++;
+        //    index++;
         const uid = friend[0]
         const { name, email, image } = friend[1];
 
@@ -142,7 +168,7 @@ console.log('pefore get users');
 
               style={{ flexDirection: "row" }}
             >
-              <Thumbnail source={image? { uri: image } : unknown } circular />
+              <Thumbnail source={image ? { uri: image } : unknown} circular />
               <View style={{ flexDirection: "column", justifyContent: 'flex-start', alignItems: 'flex-start', textAlign: 'left', marginLeft: 10 }}>
                 <View>
                   <Text style={{ fontWeight: "bold", marginLeft: 2 }}>

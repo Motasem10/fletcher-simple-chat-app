@@ -68,7 +68,7 @@ class SignUp extends Component {
     );
   };
   handelSubmit = () => {
-    console.log('from handel submit ', this.state)
+
     const { errors, isvalid } = validation(this.state);
     if (!isvalid) return this.setState({ errors, errors });
     this.props

@@ -80,7 +80,7 @@ const setLastMsg = (uid, msg) => dispatch => {
         //add this friend to top of list
 
         let friendList = addToHeadOfObject(fr, uid);
-        console.log({friendList});
+        ///console.log({friendList});
 
         friendList[uid].lastMsg = msg; //set msg as last msg
         AsyncStorage.setItem("Friends", JSON.stringify(friendList));
@@ -151,6 +151,7 @@ const getTime = () => {
 
 const uploadImg = msg => {
   const { reciverUid, senderUid } = store.getState().chat;
+  
   firebase
     .storage()
     .ref("image/msg")
@@ -174,8 +175,11 @@ const sendMsg = msg => dispatch => {
     (temporarily) i will use promise to change state in component to update it  
     */
     //get current  conversition data
-    const { reciverUid, senderUid, lastChat, numberOfDoc,numberOfLoodingDoc } = store.getState().chat;
+  //  console.log({sendMsg:store.getState()});
+    const { reciverUid, lastChat, numberOfDoc,numberOfLoodingDoc } = store.getState().chat;
+    const {senderUid}=store.getState().chat;
     if (msg.msg.length < 1 && msg.msg.uri < 1) return; //if empty msg
+
     const time = new Date().getTime();
     //addtime and   mine=true  means i send it
     let newMsg = { ...msg, time, mine: true };

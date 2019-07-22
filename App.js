@@ -36,28 +36,30 @@ console.log('componentDidMount',this.state.isAuth)
         if(!user) {
         
           this.setState({isAuth:false})
-          console.log(2,this.state.isAuth.isAuth);
+    //      console.log(2,this.state.isAuth.isAuth);
           firebase.auth().signOut();
 
         }
       // this.setState({isAuth:true})
       if(user) {this.setState({isAuth:true});
-      console.log(3);
+  //    console.log(3,JSON.parse(user));
+
       store.dispatch( setCurrentUser(JSON.parse(user)));
-console.log('usssser',{user:JSON.parse(user)})
+//console.log('usssser',{user:JSON.parse(user)})
      
-      console.log('cccc',store.getState())
+     // console.log('cccc',store.getState())
       }
     })
         
       firebase.auth().onAuthStateChanged(user => {
         if (user) { 
-          console.log(4)
-             console.log(user);
+     //console.log({user,email:user.email,uid:user.uid});
+          store.dispatch( 
+          setCurrentUser({uid:user.uid,email:user.email}));
                  this.setState({ isAuth: true });
                    // store.dispatch( setCurrentUser('WDWQPD'))
           } else {
-            console.log(5)
+       //     console.log(5)
             this.setState({ isAuth: false });
          AsyncStorage.removeItem('Friends');
          AsyncStorage.removeItem('USER');     
