@@ -39,7 +39,7 @@ simple chat app with react-native and firebase
 ### `Home Screen`
 <div style={{display: flex; flex-direction: row}}>
   <img src="https://user-images.githubusercontent.com/45076188/61658397-8ddb3900-acc5-11e9-8162-df88c4fbba2f.gif" width="270" />
-  <img align="right" style="float: right;" src="https://user-images.githubusercontent.com/45076188/61658381-86b42b00-acc5-11e9-8c98-d6c91ebfadab.gif" width="270" />
+  <img  src="https://user-images.githubusercontent.com/45076188/61658381-86b42b00-acc5-11e9-8c98-d6c91ebfadab.gif" width="270" />
 </div>
     
     
