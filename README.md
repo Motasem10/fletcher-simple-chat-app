@@ -28,16 +28,16 @@ simple chat app with react-native and firebase
 
 
 ### `Login and SignUp`
-<div style={{display: flex; flex-direction: row,align-content:center}} align="center">
+<div style={{display: flex; flex-direction: row,align-content:center}}>
 
   <img   src="https://user-images.githubusercontent.com/45076188/61658361-7e5bf000-acc5-11e9-9da8-2d79e7dc8419.gif" width="270" />
- <span width="50" />
+
  <img  src="https://user-images.githubusercontent.com/45076188/61658349-769c4b80-acc5-11e9-95e2-8fc414549e7e.gif" width="270" />
  </div>
 
 
 ### `Home Screen`
-<div style={{display: flex; flex-direction: row,align-content:center}}>
+<div style={{display: flex; flex-direction: row,align-content:center}} align="center">
   <img src="https://user-images.githubusercontent.com/45076188/61658397-8ddb3900-acc5-11e9-8162-df88c4fbba2f.gif" width="270" />
   <img align="right" style="float: right;" src="https://user-images.githubusercontent.com/45076188/61658381-86b42b00-acc5-11e9-8c98-d6c91ebfadab.gif" width="270" />
 </div>
